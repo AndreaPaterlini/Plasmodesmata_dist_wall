@@ -1,0 +1,38 @@
+---
+title: "Data analysis pipeline in Paterlini, Belevich *et al.*, 2020"
+author: "created by Andrea Paterlini"
+date: "*1st October 2019*"
+
+---
+
+<br>
+
+Hello user!
+
+Welcome to the online resources for the Paterlini, Belevich *et al.*, 2019 paper. 
+The paper can be found at the journal website [here](actual link).
+
+These resources (in the form of plugins and scripts) have been developed to study Plasmodesmata, small channels that connect plant cells[^1]. Our goal was to extract information about their spatial distribution and cellular environment, as described in our paper.
+
+However, in principle, both the plugins and the pipelines can be more broadly applied and we are happy for people to get ideas from them, tweak them or repurpose them to better suit their specific needs. Should people do so, we request the developers to provide the corresponding annotated code on some open source platform, in order for the community to benefit from it.
+
+In this document, which was generated with R Markdown[^2], you will be guided through the specific data analysis steps performed in the paper. The raw files of this R Markdown are stored on my GitHub (AndreaPaterlini) at this [repository](actual link). You don't need them for the analysis process but you are welcome to look at them if you are interested in version control.
+
+The aim is for you to apply this pipeline (or parts of the same) to your own data. We provide some sample datasets here just for you to familiarise yourself with the various steps and scripts employed. 
+
+Please report bugs to andrea.paterlini@slcu.cam.ac.uk 
+
+The work is under a GNU AGPLv3 open access license[^3]. Please compile with its conditions.
+
+When you are ready please move to the [Preliminary steps section](preliminary.html)
+
+<br>
+
+[^1]: For a short review paper on Plasmodesmata with good illustrations we refer to 
+https://jcs.biologists.org/content/131/11/jcs209346.long
+
+[^2]: For more information about simple R Markdown websites, please read the documentation at 
+https://bookdown.org/yihui/rmarkdown/rmarkdown-site.html.
+
+[^3]: For more information on GNU AGPLv3 and other types of licenses, please read the documentation at 
+https://choosealicense.com/licenses/

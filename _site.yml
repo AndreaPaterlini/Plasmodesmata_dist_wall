@@ -1,0 +1,18 @@
+name: "Data analysis"
+output_dir: "."
+navbar:
+  title: "Data analysis"
+  left:
+    - text: "Welcome"
+      href: index.html
+    - text: "Preliminary steps"
+      href: preliminary.html
+    - text: "Distributions"
+      href: distributions.html
+    - text: "Clusters"
+      href: clusters.html
+    - text: "Surfaces"
+      href: surfaces.html
+    - text: "Cell wall"
+      href: wall.html      
+      

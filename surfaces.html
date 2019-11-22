@@ -1,0 +1,683 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Surfaces</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Data analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Welcome</a>
+</li>
+<li>
+  <a href="preliminary.html">Preliminary steps</a>
+</li>
+<li>
+  <a href="distributions.html">Distributions</a>
+</li>
+<li>
+  <a href="clusters.html">Clusters</a>
+</li>
+<li>
+  <a href="surfaces.html">Surfaces</a>
+</li>
+<li>
+  <a href="wall.html">Cell wall</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Surfaces</h1>
+
+</div>
+
+
+<p><br></p>
+<p>In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the Spatial control plugin shown in the <a href="#distributions.html">Distributions section</a>. Since we previously detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, we then quantified the number of these clusters of plasmodesmata we now ask: <strong>What proportions of the cellular surface do these clusters occupy</strong></p>
+<p><br></p>
+<div id="exploring-the-data" class="section level1">
+<h1>Exploring the data</h1>
+<p><br></p>
+<pre class="r"><code># we loook at one one cell as an example
+
+cluster_example &lt;- clusters %&gt;% filter(DatasetFilename == &quot;170314_Col_HD_R20_339-381um_DNN&quot; &amp; Cell == &quot;PPP1-EN&quot;)
+
+# we are going to largely replicate the workings of the fviz_clust function used in clusters section. There these steps were done implicitly by the functions but here we make the steps apparent and we extract data
+
+# we first perform a pca, reducing our data to a 2D situation
+# we scale the data to match what was done by the fviz_clust function. Note that this is not strictly necessary but more for graphical matching purposes. Clusters can be recognised in both cases. The scaling can also be turned off in the fviz_clust command. Either way the scaling effect seems negligible
+
+cluster_pca &lt;- cluster_example %&gt;% select(X_units, Y_units, Z_units) %&gt;% prcomp(scale. = TRUE)
+
+# we can check that the PCA is not causing a signicant loss of information
+
+tidy(cluster_pca, matrix = &quot;pcs&quot;) %&gt;% print() </code></pre>
+<pre><code>## # A tibble: 3 x 4
+##      PC std.dev percent cumulative
+##   &lt;dbl&gt;   &lt;dbl&gt;   &lt;dbl&gt;      &lt;dbl&gt;
+## 1     1   1.54  0.785        0.785
+## 2     2   0.784 0.205        0.990
+## 3     3   0.172 0.00983      1</code></pre>
+<pre class="r"><code># more than 90% retained in all cases in the first two dimentions
+
+# we attach the pca columns contained in pca object to the original data
+# 1 and 2 only take the first two PCAs, we are not attaching third PCA
+
+cluster_example &lt;- cbind(cluster_example, cluster_pca$x[, 1:2]) %&gt;% 
+  # we also order the numbers of clusters for that well so that they will appear in a logical order in the legend 
+  mutate(.cluster = factor(.cluster, levels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;,&quot;7&quot;,&quot;8&quot;, &quot;9&quot;, &quot;10&quot;, &quot;11&quot;))) %&gt;% 
+  mutate(.class = factor(.class, levels = c(&quot;1&quot;, &quot;2&quot;, &quot;3&quot;, &quot;4&quot;, &quot;5&quot;, &quot;6&quot;,&quot;7&quot;,&quot;8&quot;, &quot;9&quot;, &quot;10&quot;, &quot;11&quot;, &quot;12&quot;, &quot;13&quot;, &quot;14&quot;)))
+
+# we use now use the chull function
+# it finds the rows that contain the points (and the coordinates) that describe the edges of the poligon that could be drawn around each cluster
+# to isolate those rows we use the function slice
+# we group by cluster to obtain the single areas or we don&#39;t to obtain the full surface of the cell 
+
+cluster_chull_sil &lt;- cluster_example %&gt;% 
+  group_by(.cluster) %&gt;% 
+  slice(chull(PC1, PC2))
+
+cluster_chull_class &lt;- cluster_example %&gt;% 
+  group_by(.class) %&gt;% 
+  slice(chull(PC1, PC2))
+
+total_chull &lt;- cluster_example %&gt;% 
+  slice(chull(PC1, PC2))
+
+# we visualise the results, in this case for the silhouette method
+
+ggplot(cluster_example, aes(PC1, PC2)) + theme_bw() +
+  geom_point(data = cluster_example, aes(colour=.cluster, fill=.cluster)) +
+  geom_polygon(data = total_chull, alpha = 0.09) +
+  geom_polygon(data = cluster_chull_sil, aes(colour=.cluster, fill = .cluster), alpha = 0.3) +
+  xlab(&quot;PC1 (78.5%)&quot;) + ylab(&quot;PC2 (20.5%)&quot;) + 
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15),
+        legend.text = element_text(size = 15),
+        legend.title = element_text(size = 15)) +
+  labs(fill = &quot;Silhouette \n clusters&quot;, colour = &quot;Silhouette \n clusters&quot;)</code></pre>
+<p><img src="surfaces_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code># you will notice that this is nearly identical to the fviz function results
+# by using .class instead you would get the results according to the McLust function
+
+# now we want to calculate areas
+# we  created a small function that uses the areapl from the splancs library
+
+cha &lt;- function(x,y){
+  i &lt;- chull(x,y)
+  return(splancs::areapl(cbind(x[i],y[i])))
+}
+
+cluster_example %&gt;% 
+  mutate(total_area = cha(PC1, PC2)) %&gt;% 
+  group_by(.cluster) %&gt;% 
+  summarise(area = cha(PC1, PC2), total_area = unique(total_area)) %&gt;%
+  head()</code></pre>
+<pre><code>## # A tibble: 6 x 3
+##   .cluster   area total_area
+##   &lt;fct&gt;     &lt;dbl&gt;      &lt;dbl&gt;
+## 1 1        0.0292       12.6
+## 2 2        0.0577       12.6
+## 3 3        0.365        12.6
+## 4 4        0.317        12.6
+## 5 5        0.359        12.6
+## 6 6        0.167        12.6</code></pre>
+<pre class="r"><code># do note that the units of these values are not strictyly speaking conventional surface units as the coordinates underwent a pca. We address this aspect in following steps</code></pre>
+<p><br></p>
+</div>
+<div id="compiling-the-data" class="section level1">
+<h1>Compiling the data</h1>
+<p><br></p>
+<pre class="r"><code># to process multiple cells in one go we write a larger function encompassing the steps described above 
+
+calculate_areas_sil &lt;- function(x){
+  
+  # Run PCA
+  x_pca &lt;- x %&gt;% 
+    select(X_units, Y_units, Z_units) %&gt;% 
+    prcomp(scale. = TRUE)
+  
+  # bind first two PCs
+  x &lt;- cbind(x, x_pca$x[, 1:2])
+  
+  # calculate area of each cluster (here we do it for the silhouette method)
+  area_of_clusters &lt;- x %&gt;% 
+    group_by(.cluster) %&gt;% 
+    summarise(area = cha(PC1, PC2))
+  
+  # add total area
+  area_of_clusters$total_area &lt;- cha(x$PC1, x$PC2)
+  
+  #add sum of the areas of clusters
+  area_of_clusters$sum_area &lt;- sum(area_of_clusters$area)
+  
+  #percentage conductive surface (of the total)
+  area_of_clusters$perc_tot &lt;- area_of_clusters$sum_area/area_of_clusters$total_area*100
+  
+  #percentage of surface of each cluster 
+  area_of_clusters$perc &lt;- area_of_clusters$area/area_of_clusters$total_area*100
+  
+  return(area_of_clusters)
+}
+
+
+# a nearly identical second function is created for the Mclust method
+
+calculate_areas_class &lt;- function(x){
+  
+  x_pca &lt;- x %&gt;% 
+    select(X_units, Y_units, Z_units) %&gt;% 
+    prcomp(scale. = TRUE)
+  x &lt;- cbind(x, x_pca$x[, 1:2])
+  
+  # we use .class instead
+  area_of_clusters &lt;- x %&gt;% 
+    group_by(.class) %&gt;% 
+    summarise(area = cha(PC1, PC2))
+  
+  area_of_clusters$total_area &lt;- cha(x$PC1, x$PC2)
+  
+  area_of_clusters$sum_area &lt;- sum(area_of_clusters$area)
+  
+  area_of_clusters$perc_tot &lt;- area_of_clusters$sum_area/area_of_clusters$total_area*100
+  
+  area_of_clusters$perc &lt;- area_of_clusters$area/area_of_clusters$total_area*100
+  
+  return(area_of_clusters)
+}
+
+
+# we apply it, nesting the rest of the data
+
+clusters_processed &lt;- clusters %&gt;% 
+  group_by(DatasetFilename, Genotype, Interface, Cell) %&gt;% 
+  nest() %&gt;% 
+  mutate(cluster_sil_areas = lapply(data, calculate_areas_sil)) %&gt;% 
+  mutate(cluster_class_areas = lapply(data, calculate_areas_class))
+
+# we then unnest separately the results for either method
+
+area_for_method_sil &lt;- clusters_processed %&gt;% 
+  unnest(cluster_sil_areas) %&gt;% 
+  mutate(Method = &quot;Silhouette&quot;)
+
+area_for_method_class &lt;- clusters_processed %&gt;% 
+  unnest(cluster_class_areas) %&gt;% 
+  mutate(Method = &quot;Mclust&quot;)
+
+# we then merge them
+
+clusters_unnested &lt;- bind_rows(area_for_method_class, area_for_method_sil)</code></pre>
+<p><br></p>
+</div>
+<div id="calculating-the-median-total-conductive-surface-of-an-interface-as" class="section level1">
+<h1>Calculating the median total conductive surface of an interface (as %)</h1>
+<p><br></p>
+<pre class="r"><code># we now ask how much of the total surface (the gray shaded area we calculated in previous steps) is occupied by PD clusters
+
+# for plotting you need to isolate the unique value for each cell (otherwise each cluster will be counted as a point altering the shape of distribution).
+#the easiest way is to subset the dataset only for relevant columns and then use unique
+
+ggplot(data=unique(clusters_unnested[, c(&quot;Genotype&quot;, &quot;Interface&quot;, &quot;DatasetFilename&quot;, &quot;Cell&quot;, &quot;perc_tot&quot;, &quot;Method&quot;)]), aes(x= Method, y=perc_tot, colour= Genotype, fill= Genotype)) + theme_bw() +
+  geom_violin(alpha=0.5)+ 
+  ggbeeswarm::geom_quasirandom(aes(group=Genotype), colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
+  stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
+               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
+  labs(y = &quot;% of interface surface overall occupied by PD clusters&quot;) +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15)) +
+  scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
+  scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
+  facet_grid(~Interface) </code></pre>
+<p><img src="surfaces_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><br></p>
+</div>
+<div id="calculating-the-median-surface-of-individual-clusters-as" class="section level1">
+<h1>Calculating the median surface of individual clusters (as %)</h1>
+<p><br></p>
+<pre class="r"><code># to calculate the surface of individual clusters independently we don&#39;t need to subset the data
+
+ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotype)) + theme_bw() +
+  geom_violin(alpha=0.5)+ 
+  ggbeeswarm::geom_quasirandom(aes(group=Genotype), colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
+  stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
+               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
+  labs(y = &quot;% of interface surface occupied by individual PD clusters&quot;) +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15)) +
+  scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
+  scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
+  facet_grid(~Interface) +
+  scale_y_log10()</code></pre>
+<p><img src="surfaces_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<p><br></p>
+</div>
+<div id="calculating-the-actual-surface-of-the-interface" class="section level1">
+<h1>Calculating the actual surface of the interface</h1>
+<p><br></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

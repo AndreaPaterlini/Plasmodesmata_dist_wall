@@ -1,0 +1,809 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Distributions</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Data analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Welcome</a>
+</li>
+<li>
+  <a href="preliminary.html">Preliminary steps</a>
+</li>
+<li>
+  <a href="distributions.html">Distributions</a>
+</li>
+<li>
+  <a href="clusters.html">Clusters</a>
+</li>
+<li>
+  <a href="surfaces.html">Surfaces</a>
+</li>
+<li>
+  <a href="wall.html">Cell wall</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Distributions</h1>
+
+</div>
+
+
+<p><br></p>
+<p>In this section we are now going to use the the plugins we developed for the Paterlini, Belevich et al. paper. The first question we will try to address concerns the distribution of Plasmodesmata (or similar types of annotations along a given model). We start by asking: <strong>Is there a bias in how plasmodesmata are distributed over a cellular interface?</strong></p>
+<p>If you downloaded a standalone version of MIB from the website then the plugins are already contained in the software. If you have dowloaded the Matlab version of the programme make sure you have download the plugins from <a href="actual%20link">here</a> and unzipped them in the <em>Plugin</em> folder of MIB. They will automatically appear in the scroll down list under the <em>Plugin</em> tab in the MIB interface. To launch MIB from the Matlab environment enter “mib” as a command. We will apply these plugins in <a href="#run">the next section</a>.</p>
+<p><br></p>
+<div id="run" class="section level1">
+<h1>Run the SpatialControlPoints plugin</h1>
+<p><br></p>
+<p>Make sure you have loaded your datasets, models and annotations as described in in the <a href="preliminary.html">Preliminary Steps section</a>.</p>
+<p>From the MIB interface go to the <em>Plugins</em> tab -&gt; <em>Plasmodesmata</em> -&gt; <em>SpatialControlPoints</em>. A user interface will appear with four fields to be filled in.</p>
+<p>“Define number of interactions” defines the number of spatial simulations the plugin will generate. Each simulation has a number of points equal to that of the real plasmodesmata on the interface of interest. The points in the simulations have a uniform distribution. “The filename suffix” defines the ending of the name of the file that will be generated by the plugin. “The index of material for thinning” refers to which material in your <em>.model</em> file contains the segmented surface of interest. In the case of the sample datasets this is <em>wall</em>. This section is equivalent to the <em>Thin and remove branches</em> button within the pre-processing box of the CellWallThickness plugin in the <a href="wall.html">Cell Wall section</a>. The function in both plugins generates a midline of the model (in presence of branching points, keeps the longest branch) and temporarily stores it in the Mask layer of the <em>.model</em> file. For more details please see the paper. “The random seed generator” enables to reproduce results (generating the same control distributions for that particular model). The same seed generator number needs to be used for such purpose. Every time you will run the plugin - on the same dataset - with that number you will obtain the same control points.</p>
+<p>You should ultimately see something like the following, where a pink midline has appeared:</p>
+<div class="figure">
+<embed src="img/wall_thinning.tif" width="800" />
+
+</div>
+</div>
+<div id="extract-real-positions" class="section level1">
+<h1>Extract real positions</h1>
+<p><br> In addition to the spatial controls we generated <a href="#run">above</a> we also need to extract the actual positions of our Plasmodesmata (or points of interest), in order to compare the two. Their coordinates are already contained in the <em>.ann</em> files but we need to export them in a more machine readable format, more suitable for data processing.</p>
+<p>Open the <em>Annotation List</em> (bottom left corner after selecting <em>Annotations</em> from the scroll down menu), press <em>Save</em> and save them as <em>.csv</em> files.</p>
+<p>The coordinates of the points are recalculated relative to the bounding box of the image. The same operation was also performed by the plugin after generating the control points.</p>
+<p><br></p>
+</div>
+<div id="check-outputs" class="section level1">
+<h1>Check outputs</h1>
+<p><br></p>
+<p>If the plugin has worked correctly and you followed the instructions to export the coordinates of your real points your <em>Data_individual_cells</em> folder should now contain three additional files.</p>
+<p>Two are the output of the SpatialControlPoints plugin: a <i>*_random_points.csv</i> and a <i>*_random_points.mat</i>. Both files contain the same data but in two different formats. People confident with Matlab are more than welcome to use that format, here we will proceed with the <em>.csv</em> format.</p>
+<p>The fird file is a <i>*_Ann.csv</i> file that contains the coordinates of the real points.</p>
+<p><br> <embed src="img/random_points.tif" width="700" /> <br></p>
+<p>If you want to analyse multiple datasets at the same, as we will do here, the processes described above need to be repeated for each <em>.am</em> file.</p>
+<p><br></p>
+</div>
+<div id="moving-to-r" class="section level1">
+<h1>Moving to R</h1>
+<p><br></p>
+<p>We have now generated the data necessary for our analyses so we will move away from the MIB environment and process the data in R. Please make sure you have downloaded the most recent version of R from <a href="https://www.r-project.org/">here</a>. We also reccommend you download the RStudio integrated development environment from <a href="https://rstudio.com/products/rstudio/">here</a>, which is a friendly interface to operate R.</p>
+<p><br></p>
+</div>
+<div id="reading-the-files" class="section level1">
+<h1>Reading the files</h1>
+<p><br></p>
+<pre class="r"><code>library(tidyverse)
+
+#the working directory of your files will be different from this one so make sure you change it appropriately
+setwd(&#39;./Data_individual_cells&#39;)
+
+### READING THE FILES CONTAINING THE OUTPUT OF THE SPATIALCONTROLPOINTS PLUGIN
+
+# the following function will read all the &quot;random_points&quot; files in the folder you assigned as your working directory
+# using the mutate function then we add extra informations such as genotype and the interface we are analysing
+# a new large dataset will be created
+
+Col_simul &lt;- list.files(path = &quot;.&quot;, pattern = &quot;random_points.csv&quot;) %&gt;% 
+  map_df(function(f){
+        #this will print the dataset 
+    print(f) 
+    x &lt;- read.csv(f) %&gt;% 
+      as.data.frame %&gt;% 
+      mutate(Genotype = &quot;Col-0&quot;) %&gt;%
+      mutate(Interface = &quot;PPP-EN&quot;) 
+  })    
+
+### READING THE FILES CONTAINING THE EXPORTED REAL ANNOTATIONS
+
+#the same code as above will also work to read the files containing the real PD positions do but we need to add a couple of extra lines due to the way the file was written by MIB programme
+
+library(data.table)
+
+Col_real &lt;- list.files(path = &quot;.&quot;, pattern = &quot;Ann.csv&quot;) %&gt;% 
+  map_df(function(f){
+    print(f) 
+    x &lt;- read_csv(f) %&gt;% 
+      as.data.frame %&gt;% 
+      # we need to select only the columns where the coordinates were recalculated relative to the bounding box
+      subset(select = c(LabelPositionXunits, LabelPositionYunits, LabelPositionZunits)) %&gt;% 
+      # for compatibility with the Col_simulated we need to have the same labels on the columns
+      setnames(old = c(&#39;LabelPositionXunits&#39;,&#39;LabelPositionYunits&#39;, &#39;LabelPositionZunits&#39;), new = c(&#39;X_units&#39;,&#39;Y_units&#39;, &#39;Z_units&#39;)) %&gt;%
+      mutate(Genotype = &quot;Col-0&quot;) %&gt;%
+      mutate(DatasetFilename = f) %&gt;%
+      mutate(Interface = &quot;PPP-EN&quot;) %&gt;%
+      # we add a fake column for iteration - this is important to be able to merge this object with Col_simul
+      mutate(IterationNumber = &quot;real&quot;)
+  })    
+
+### MERGING THE TWO OBJECTS
+
+# Before merging we need to clean the name of the files, removing the original file format and other endings added during the data generation by the plugins. 
+# It is important that the Datsetfilenames in the Col_simul and Col_real objects are the same before we merge them. Comparisons won&#39;t be otherwise possible
+
+Col_simul$DatasetFilename &lt;- gsub(&quot;.am&quot;, &quot;&quot;, Col_simul$DatasetFilename)
+Col_real$DatasetFilename &lt;- gsub(&quot;_Ann.csv&quot;, &quot;&quot;, Col_real$DatasetFilename)
+
+#now we are going to merge the two files
+Col_0 &lt;- rbind(Col_real, Col_simul)
+
+#we are now going to separate the daset file name in two columns, one containing info on the root and one containing info on the actual cell
+
+# we are going to duplicate the dataset column first
+Col_0$Cell = Col_0$DatasetFilename
+
+#we are splitting the column just before &quot;PPP&quot; therefore taking _ as well 
+# and retains first part of the split (it takes some time)
+library(stringr)
+Col_0$DatasetFilename &lt;- sapply(str_split(Col_0$DatasetFilename, &quot;.PPP&quot;), head, 1)
+
+# in the column cell we remove anything before the name of the cell
+Col_0$Cell &lt;- gsub(&quot;.*PPP&quot;, &quot;PPP&quot;, Col_0$Cell)</code></pre>
+<p><br></p>
+</div>
+<div id="d-visualisations" class="section level1">
+<h1>3D visualisations</h1>
+<p><br></p>
+<pre class="r"><code>#you will need this library for plotting
+# install.packages(&quot;scatterplot3d&quot;)
+library(&quot;scatterplot3d&quot;)  
+
+#we are going to look at one single cell so we will filter the Col_0 object
+Col_0_subset &lt;- filter(Col_0, DatasetFilename == &quot;170314_Col_HD_R20_339-381um_DNN&quot; &amp; Cell == &quot;PPP1-ENa&quot;)
+
+# now we are going to separate the real coordinates
+real_example &lt;- filter(Col_0_subset, IterationNumber == &quot;real&quot;)
+# and one of the simulations
+simulation_example &lt;- filter(Col_0_subset, IterationNumber == &quot;1&quot;)
+
+# we need to retain just the columns containing x, y, z coordinates
+real_example &lt;- real_example[,c(&#39;X_units&#39;,&#39;Y_units&#39;, &#39;Z_units&#39;)]
+simulation_example &lt;- simulation_example[,c(&#39;X_units&#39;,&#39;Y_units&#39;, &#39;Z_units&#39;)]
+
+# for plotting we need an extra function to add grids
+# you will need an internet connection
+source(&#39;http://www.sthda.com/sthda/RDoc/functions/addgrids3d.r&#39;)
+
+# this line creates the space for two images side by side
+par(mfrow=c(1, 2))
+
+# we create the environment
+s3d &lt;- scatterplot3d(real_example, main = &quot;Real distribution&quot;, 
+              xlab = &quot;x&quot;,
+              ylab = &quot;y&quot;,
+              zlab = &quot;z&quot;, pch = &quot;&quot;, type = &quot;h&quot;, color=&quot;burlywood2&quot;, grid=FALSE, box=FALSE, lty.hplot=3)
+
+#we add grids
+addgrids3d(real_example, grid = c(&quot;xy&quot;, &quot;xz&quot;, &quot;yz&quot;))
+
+#now we add the points in
+s3d$points3d(real_example, pch = 16, col=&quot;firebrick1&quot;)
+
+#the same is repeated for the simulated data
+
+s3d &lt;-scatterplot3d(simulation_example, main= &quot;Simulated distribution&quot;, 
+              xlab = &quot;x&quot;,
+              ylab = &quot;y&quot;,
+              zlab = &quot;z&quot;, pch = &quot;&quot;, type = &quot;h&quot;, color=&quot;khaki2&quot;, grid=FALSE, box=FALSE, lty.hplot=3)  
+
+addgrids3d(simulation_example, grid = c(&quot;xy&quot;, &quot;xz&quot;, &quot;yz&quot;))
+
+s3d$points3d(simulation_example, pch = 16, col=&quot;gold3&quot;)</code></pre>
+<p><img src="distributions_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code># please note that there might be differences compared to the figure in the paper since different simulated spatial controls were employed for the two.
+# However, there are no conceptual differences </code></pre>
+</div>
+<div id="euclidean-distances-calculations-and-plotting" class="section level1">
+<h1>Euclidean distances calculations and plotting</h1>
+<p><br></p>
+<pre class="r"><code># the following line nests the 3 columns corresponding to the x,y,z coordinates into a new column called &quot;coordinates&quot;
+Col_0_nested &lt;- Col_0 %&gt;% 
+  group_by(DatasetFilename, Cell, Genotype, Interface, IterationNumber) %&gt;% 
+  nest(.key=&quot;coordinates&quot;) 
+#the command can take a while
+
+# the next function calculates a matrix of the coordinates and then euclidean distances between all points
+
+matrixdist &lt;- function(my_df) {
+ matrix &lt;- as.matrix(my_df) 
+ distance &lt;- dist(matrix,  method = &quot;euclidean&quot;)
+ # return a numeric vector instead of distance matrix
+ as.numeric(distance)
+}
+
+#we create a new column for the distances (that will be calculated with the function above)
+#There is a map function in other packages we are using so we make it explicit without loading library
+
+Col_0_nested &lt;- Col_0_nested %&gt;%
+  mutate(distances = purrr::map(coordinates, matrixdist)) %&gt;% 
+  # this is a handy trick for later colouring purposes, you generate a coloumn with a binary classification using ifelse. All those that are not real are simulated
+  mutate(Type = ifelse(IterationNumber == &quot;real&quot;, &quot;Real points&quot;, &quot;Simulated&quot;))
+
+#for graphical purposes we reduce the number of iterations that will be plotted on the graph to 100 (rather than the available 1000). This is done just to speed things up
+
+Col_0_nested %&gt;% 
+  filter(IterationNumber %in% c(1:100, &quot;real&quot;)) %&gt;% 
+  unnest(distances) %&gt;% 
+  ggplot(aes(distances, group = IterationNumber, colour = Type)) +
+  geom_density() + facet_wrap(~DatasetFilename) + theme_bw() + 
+  #geom_hline is just a trick to make the lines &quot;float&quot; rather than have a base bar
+  geom_hline(yintercept=0, colour=&quot;white&quot;, size=0.5) +
+  theme(legend.position=c(0.85, 0.1)) +
+  labs(x = &quot;Pairwise euclidean distances between PDs&quot;, y = &quot;Frequency of occurrence&quot;) + 
+  theme(axis.title.x = element_text(size = 12), 
+        axis.title.y = element_text(size = 12), 
+        axis.text.x = element_text(size = 12), 
+        axis.text.y = element_text(size = 12),
+        strip.text.x = element_text(size = 6),
+        legend.text=element_text(size=12),
+        legend.title = element_text(size=12)) +
+  facet_wrap(DatasetFilename~Cell)</code></pre>
+<p><img src="distributions_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># just focusing on a single cell
+# we filter and unnest the object
+Col_0_subset &lt;- Col_0_nested %&gt;%
+  filter(DatasetFilename == &quot;170314_Col_HD_R20_339-381um_DNN&quot; &amp; Cell == &quot;PPP1-ENa&quot;) %&gt;% unnest(distances)
+
+Col_0_subset %&gt;% 
+  # here we annotated out the filtering of iteration so it takes longer
+  # this is just to show that there is no difference in data interpretation by reducing the visualisation to 100
+  #filter(IterationNumber %in% c(1:100, &quot;real&quot;)) %&gt;% 
+  ggplot(aes(distances, group = IterationNumber, colour = Type)) +
+  geom_density() + 
+  # to make the line of the real points stand out we use a trick and make it wider
+  geom_density(data= filter(Col_0_subset, Type == &quot;Real points&quot;), aes(distances), size = 2) + theme_bw() + 
+  geom_hline(yintercept=0, colour=&quot;white&quot;, size=2) +
+  labs(x = &quot;Pairwise euclidean distances between PDs&quot;, y = &quot;Frequency of occurrence&quot;) +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15)) +
+  scale_color_manual(values=c(&quot;firebrick1&quot;, &quot;gold2&quot;)) </code></pre>
+<p><img src="distributions_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
+<pre class="r"><code># please note that there might be slight differences compared to the figure in the paper since different spatial controls were employed for the two.
+# There are no conceptual differences </code></pre>
+<p><br></p>
+</div>
+<div id="ks-tests-and-plotting-of-cell-values" class="section level1">
+<h1>ks tests and plotting of cell values</h1>
+<p><br></p>
+<pre class="r"><code># to perform the next section we actually need to structure the data in a slighly different manner. Rather than editing the Col_0 objects we generated we go back to the Col_real and Col_simul objects in the first section
+
+# we generate again the distances, this time separately for real and simul
+
+Col_real_dists &lt;- Col_real %&gt;% 
+  group_by(DatasetFilename) %&gt;% 
+  summarise(dist_real = list(as.numeric(dist(cbind(X_units, Y_units, Z_units)))))
+
+Col_simul_dists &lt;-  Col_simul %&gt;% 
+  group_by(DatasetFilename, IterationNumber) %&gt;% 
+  summarise(dist_sim = list(as.numeric(dist(cbind(X_units, Y_units, Z_units)))))
+
+# we merge the two in a way that the real_dist data gets repeated for each one of the simul_dist
+
+Col_0_dists &lt;- full_join(Col_real_dists, Col_simul_dists, by = c(&quot;DatasetFilename&quot;)) %&gt;%
+  mutate(Interface = &quot;PPP-EN&quot;) %&gt;%
+  mutate(Genotype  = &quot;Col-0&quot;)
+
+# we create a function to perforn a pairwise ks test and clean its output
+
+tidy_ks &lt;- function(x, y){
+  ks.test(x, y) %&gt;% broom::tidy()
+}
+
+# we store the output of the function in a new column
+
+Col_0_dists &lt;- Col_0_dists %&gt;%
+  mutate(ks = map2(dist_real, dist_sim, tidy_ks)) %&gt;% 
+  unnest(ks)
+
+# we can already assess the significance of the results based on number of cases with a non significant test result 
+# histograms can then we generated based on these results
+
+non_signif &lt;- filter(Col_0_dists, p.value &gt; 0.05)
+# 0 so all the tests suggest a difference between each of the 1000 simulated distributions and the real one (in terms of distances)
+
+# we can then look at variation between cells of the same genotype
+
+Col_0_dists %&gt;% 
+  ggplot(aes(statistic, colour = DatasetFilename, fill= DatasetFilename)) + 
+  theme_bw() +
+  geom_density(size = 1, alpha = 0.5) +
+  theme(legend.position = &quot;bottom&quot;) +
+  # we colour 0 as this is the value in the test results that would mean identity between the two distributions tested
+  geom_vline(xintercept=0, colour=&quot;red&quot;, size=0.80) +
+  scale_x_continuous(limits = c(0, 0.35)) +
+  # to split the legend over 2 columns we use the guides argument
+  guides(colour = guide_legend(ncol = 2)) + 
+  labs(x = &quot;Ks statistic test value&quot;, y = &quot;Density&quot;) +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        strip.text.y = element_text(size = 15),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 10)) +
+  facet_grid(Genotype~Interface) </code></pre>
+<p><img src="distributions_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<pre class="r"><code># please note that there might be slight differences compared to the figure in the paper as different spatial controls were employed here.
+# There are no conceptual differences </code></pre>
+<p><br></p>
+</div>
+<div id="ks-values-for-genotype" class="section level1">
+<h1>ks values for genotype</h1>
+<p><br></p>
+<pre class="r"><code># please note that here we have data for a single genotype (the sample data provided belong to WT roots) so the visualisation might appear less useful compared to what we had in the paper
+
+# summarising the test outputs per cell and per genotype 
+
+distances_cell &lt;- Col_0_dists %&gt;% group_by(Genotype, Interface, DatasetFilename) %&gt;% 
+  dplyr::summarise(mean_ks = mean(statistic, na.rm = TRUE), 
+                   mean_p = mean(p.value, na.rm = TRUE))
+
+#check again statistics
+non_signif &lt;- filter(distances_cell, mean_p &gt; 0.05)
+# 0
+
+#we are now going to separate the dataset file name in two columns, one containing info on the root and one containing info on the actual cell
+# we are going to duplicate the dataset column first
+distances_cell$Cell = distances_cell$DatasetFilename
+
+#we are splitting the column just before &quot;PPP&quot; therefore taking _ as well 
+# and retains first part of the split (it takes some time)
+library(stringr)
+distances_cell$DatasetFilename &lt;- sapply(str_split(distances_cell$DatasetFilename, &quot;.PPP&quot;), head, 1)
+
+# in the column cell we remove anything before the name of the cell
+distances_cell$Cell &lt;- gsub(&quot;.*PPP&quot;, &quot;PPP&quot;, distances_cell$Cell)
+
+# we are now going to plot the data for all the cells (violin plots) and for single cells (symbols) at the same time. Bars of corresponding colours will indicate medians
+
+Col_0_dists %&gt;% 
+  ggplot(aes(x= Genotype, y=statistic, colour= Genotype, fill= Genotype)) +    theme_bw() +
+  # we plot the values for all cells
+  geom_violin(alpha=0.5) + 
+  stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
+               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1) +
+  # now we plot those for the single cells
+  geom_point(data = distances_cell, aes(x= Genotype, y= mean_ks, shape=DatasetFilename), colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, show.legend = FALSE ) +
+  stat_summary(data = distances_cell, aes(x= Genotype, y= mean_ks), fun.y = median, fun.ymin = median, fun.ymax = median,
+               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1, colour=&quot;black&quot;) + 
+  geom_hline(yintercept=0, colour=&quot;red&quot;, size=0.75) + 
+  labs(y = &quot;Ks statistic test value&quot;) +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15)) +
+  # we have 2 different roots or datsets here so we provide two symbols to differenciate them
+  scale_shape_manual(values=c(19, 17)) +
+  # we have one single genotype here
+  scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
+  scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
+  facet_grid(~Interface)</code></pre>
+<p><img src="distributions_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code># please note that there might be slight differences compared to the figure in the paper as different spatial controls were employed here.
+# There are no conceptual differences </code></pre>
+<p><br></p>
+<p>You have now completed this section: in the case of the data we provided we have shown that plasmodesmata display a bias in their distribution (when compared to uniform distributions). In the <a href="clusters.html">next section</a> we will ask further questions about the this spatial bias we detected.</p>
+<p><br></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>

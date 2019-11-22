@@ -1,0 +1,667 @@
+<!DOCTYPE html>
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+
+<meta charset="utf-8" />
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="generator" content="pandoc" />
+
+
+
+
+<title>Clusters</title>
+
+<script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<link href="site_libs/bootstrap-3.3.5/css/bootstrap.min.css" rel="stylesheet" />
+<script src="site_libs/bootstrap-3.3.5/js/bootstrap.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/html5shiv.min.js"></script>
+<script src="site_libs/bootstrap-3.3.5/shim/respond.min.js"></script>
+<script src="site_libs/jqueryui-1.11.4/jquery-ui.min.js"></script>
+<link href="site_libs/tocify-1.9.1/jquery.tocify.css" rel="stylesheet" />
+<script src="site_libs/tocify-1.9.1/jquery.tocify.js"></script>
+<script src="site_libs/navigation-1.1/tabsets.js"></script>
+<link href="site_libs/highlightjs-9.12.0/default.css" rel="stylesheet" />
+<script src="site_libs/highlightjs-9.12.0/highlight.js"></script>
+
+<style type="text/css">code{white-space: pre;}</style>
+<style type="text/css">
+  pre:not([class]) {
+    background-color: white;
+  }
+</style>
+<script type="text/javascript">
+if (window.hljs) {
+  hljs.configure({languages: []});
+  hljs.initHighlightingOnLoad();
+  if (document.readyState && document.readyState === "complete") {
+    window.setTimeout(function() { hljs.initHighlighting(); }, 0);
+  }
+}
+</script>
+
+
+
+<style type="text/css">
+h1 {
+  font-size: 34px;
+}
+h1.title {
+  font-size: 38px;
+}
+h2 {
+  font-size: 30px;
+}
+h3 {
+  font-size: 24px;
+}
+h4 {
+  font-size: 18px;
+}
+h5 {
+  font-size: 16px;
+}
+h6 {
+  font-size: 12px;
+}
+.table th:not([align]) {
+  text-align: left;
+}
+</style>
+
+
+</head>
+
+<body>
+
+<style type = "text/css">
+.main-container {
+  max-width: 940px;
+  margin-left: auto;
+  margin-right: auto;
+}
+code {
+  color: inherit;
+  background-color: rgba(0, 0, 0, 0.04);
+}
+img {
+  max-width:100%;
+  height: auto;
+}
+.tabbed-pane {
+  padding-top: 12px;
+}
+.html-widget {
+  margin-bottom: 20px;
+}
+button.code-folding-btn:focus {
+  outline: none;
+}
+summary {
+  display: list-item;
+}
+</style>
+
+
+<style type="text/css">
+/* padding for bootstrap navbar */
+body {
+  padding-top: 51px;
+  padding-bottom: 40px;
+}
+/* offset scroll position for anchor links (for fixed navbar)  */
+.section h1 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h2 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h3 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h4 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h5 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.section h6 {
+  padding-top: 56px;
+  margin-top: -56px;
+}
+.dropdown-submenu {
+  position: relative;
+}
+.dropdown-submenu>.dropdown-menu {
+  top: 0;
+  left: 100%;
+  margin-top: -6px;
+  margin-left: -1px;
+  border-radius: 0 6px 6px 6px;
+}
+.dropdown-submenu:hover>.dropdown-menu {
+  display: block;
+}
+.dropdown-submenu>a:after {
+  display: block;
+  content: " ";
+  float: right;
+  width: 0;
+  height: 0;
+  border-color: transparent;
+  border-style: solid;
+  border-width: 5px 0 5px 5px;
+  border-left-color: #cccccc;
+  margin-top: 5px;
+  margin-right: -10px;
+}
+.dropdown-submenu:hover>a:after {
+  border-left-color: #ffffff;
+}
+.dropdown-submenu.pull-left {
+  float: none;
+}
+.dropdown-submenu.pull-left>.dropdown-menu {
+  left: -100%;
+  margin-left: 10px;
+  border-radius: 6px 0 6px 6px;
+}
+</style>
+
+<script>
+// manage active state of menu based on current page
+$(document).ready(function () {
+  // active menu anchor
+  href = window.location.pathname
+  href = href.substr(href.lastIndexOf('/') + 1)
+  if (href === "")
+    href = "index.html";
+  var menuAnchor = $('a[href="' + href + '"]');
+
+  // mark it active
+  menuAnchor.parent().addClass('active');
+
+  // if it's got a parent navbar menu mark it active as well
+  menuAnchor.closest('li.dropdown').addClass('active');
+});
+</script>
+
+<div class="container-fluid main-container">
+
+<!-- tabsets -->
+
+<style type="text/css">
+.tabset-dropdown > .nav-tabs {
+  display: inline-table;
+  max-height: 500px;
+  min-height: 44px;
+  overflow-y: auto;
+  background: white;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs > li.active:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li.active:before {
+  content: "&#xe258;";
+  border: none;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open:before {
+  content: "";
+  font-family: 'Glyphicons Halflings';
+  display: inline-block;
+  padding: 10px;
+  border-right: 1px solid #ddd;
+}
+
+.tabset-dropdown > .nav-tabs > li.active {
+  display: block;
+}
+
+.tabset-dropdown > .nav-tabs > li > a,
+.tabset-dropdown > .nav-tabs > li > a:focus,
+.tabset-dropdown > .nav-tabs > li > a:hover {
+  border: none;
+  display: inline-block;
+  border-radius: 4px;
+}
+
+.tabset-dropdown > .nav-tabs.nav-tabs-open > li {
+  display: block;
+  float: none;
+}
+
+.tabset-dropdown > .nav-tabs > li {
+  display: none;
+}
+</style>
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
+</script>
+
+<style type="text/css">
+
+#TOC {
+  margin: 25px 0px 20px 0px;
+}
+@media (max-width: 768px) {
+#TOC {
+  position: relative;
+  width: 100%;
+}
+}
+
+
+.toc-content {
+  padding-left: 30px;
+  padding-right: 40px;
+}
+
+div.main-container {
+  max-width: 1200px;
+}
+
+div.tocify {
+  width: 20%;
+  max-width: 260px;
+  max-height: 85%;
+}
+
+@media (min-width: 768px) and (max-width: 991px) {
+  div.tocify {
+    width: 25%;
+  }
+}
+
+@media (max-width: 767px) {
+  div.tocify {
+    width: 100%;
+    max-width: none;
+  }
+}
+
+.tocify ul, .tocify li {
+  line-height: 20px;
+}
+
+.tocify-subheader .tocify-item {
+  font-size: 0.90em;
+  padding-left: 25px;
+  text-indent: 0;
+}
+
+.tocify .list-group-item {
+  border-radius: 0px;
+}
+
+
+</style>
+
+<!-- setup 3col/9col grid for toc_float and main content  -->
+<div class="row-fluid">
+<div class="col-xs-12 col-sm-4 col-md-3">
+<div id="TOC" class="tocify">
+</div>
+</div>
+
+<div class="toc-content col-xs-12 col-sm-8 col-md-9">
+
+
+
+
+<div class="navbar navbar-default  navbar-fixed-top" role="navigation">
+  <div class="container">
+    <div class="navbar-header">
+      <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#navbar">
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+        <span class="icon-bar"></span>
+      </button>
+      <a class="navbar-brand" href="index.html">Data analysis</a>
+    </div>
+    <div id="navbar" class="navbar-collapse collapse">
+      <ul class="nav navbar-nav">
+        <li>
+  <a href="index.html">Welcome</a>
+</li>
+<li>
+  <a href="preliminary.html">Preliminary steps</a>
+</li>
+<li>
+  <a href="distributions.html">Distributions</a>
+</li>
+<li>
+  <a href="clusters.html">Clusters</a>
+</li>
+<li>
+  <a href="surfaces.html">Surfaces</a>
+</li>
+<li>
+  <a href="wall.html">Cell wall</a>
+</li>
+      </ul>
+      <ul class="nav navbar-nav navbar-right">
+        
+      </ul>
+    </div><!--/.nav-collapse -->
+  </div><!--/.container -->
+</div><!--/.navbar -->
+
+<div class="fluid-row" id="header">
+
+
+
+<h1 class="title toc-ignore">Clusters</h1>
+
+</div>
+
+
+<p><br></p>
+<p>In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the Spatial control plugin shown in the <a href="#distributions.html">Distributions section</a>. Since we detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, we ask: <strong>Can we quantify parameters relating to these clusters, such as their number and their areas?</strong></p>
+<p><br></p>
+<div id="exploring-the-data" class="section level1">
+<h1>Exploring the data</h1>
+<p><br></p>
+<pre class="r"><code># we are only going to use the coordinates of the real points in this case 
+# so we will start from the Col_real object
+
+# we need to look at each cell individually before we run the function described later on
+# so we need to filter the original file 
+# it is actually easier to split the larger file into smaller datasets corresponding to different roots for example.
+
+# we are going to duplicate the dataset column first
+Col_real$Cell = Col_real$DatasetFilename
+
+#we are splitting the column just before &quot;PPP&quot; therefore taking _ as well 
+# and retains first part of the split (it takes some time)
+library(stringr)
+Col_real$DatasetFilename &lt;- sapply(str_split(Col_real$DatasetFilename, &quot;.PPP&quot;), head, 1)
+
+# in the column cell we remove anything before the name of the cell
+Col_real$Cell &lt;- gsub(&quot;.*PPP&quot;, &quot;PPP&quot;, Col_real$Cell)
+
+root_1 &lt;- Col_real %&gt;% filter(DatasetFilename == &quot;170314_Col_HD_R20_339-381um_DNN&quot;)
+
+root_2 &lt;- Col_real %&gt;% filter(DatasetFilename == &quot;170821_Col_HD_R01_294-317um_DNN&quot;)
+
+#FOLLOW THE ORDER IN THE FILE in which the cells are listed in the object file as the function used later follows such pattern!
+
+PPP1_EN &lt;- filter(root_1, Cell == &quot;PPP1-EN&quot;)
+# the same should be done for PPP1-Ena, PPP2-EN, PPP2-ENa)
+# and then the same again for the second root 
+
+#The following piece of code has been copied from 
+# http://www.sthda.com/english/articles/29-cluster-validation-essentials/96-determining-the-optimal-number-of-clusters-3-must-know-methods/
+
+library(factoextra)
+
+# Silhouette method
+fviz_nbclust(PPP1_EN[,c(&quot;X_units&quot;, &quot;Y_units&quot;, &quot;Z_units&quot;)], kmeans, method = &quot;silhouette&quot;, nstart = 100, k.max=20) +
+  labs(subtitle = &quot;Silhouette method&quot;)</code></pre>
+<p><img src="clusters_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
+<pre class="r"><code># this suggests 11 clusters based on the visual graph (dashed line)
+
+#nstart is important as it repeats x times the initial random placement of the seeds, which can severely affect the definition of clusters
+#kmax defines the maximum number of clusters, by default it is 10. Here we limit it below 20 as we belive it to be a reasonable number for the biological process being studied
+
+# the problem is we can&#39;t store the plot output of the fviz_nbclust so we need to annotate the number of clusters
+
+#root1
+#11 PPP1-EN 
+#20 PPP1-ENa 
+#6 PPP2-EN 
+#13 PPP2-ENa 
+
+#root 2
+#6 PPP1-EN 
+#8 PPP1a-EN 
+#20 PPP2-EN
+#12 PPP2a-EN 
+
+# Assigning resulting best cluster value and see how it looks
+# this can useful 
+
+# Run k-means clustering first 
+my_kmeans &lt;- kmeans(PPP1_EN[,c(&quot;X_units&quot;, &quot;Y_units&quot;, &quot;Z_units&quot;)], 11, nstart = 100)
+
+#visualise the output
+fviz_cluster(my_kmeans, data = PPP1_EN[,c(&quot;X_units&quot;, &quot;Y_units&quot;, &quot;Z_units&quot;)], main=FALSE, show.clust.cent=FALSE, geom=&quot;point&quot;) + theme_bw()</code></pre>
+<p><img src="clusters_files/figure-html/unnamed-chunk-2-2.png" width="672" /></p>
+<p><br></p>
+</div>
+<div id="compiling-the-data" class="section level1">
+<h1>Compiling the data</h1>
+<p><br></p>
+<pre class="r"><code># we create a function that will calculate the number of clusters and/or append them to the object. For the silhouette method, because we can&#39;t extract directly the number of cluster from the image the command generates we need to manually supply a vector k containing the values for the grouping (that is why we explored the data above). 
+# MAKE SURE VECTOR NUMBERS ARE IN THE ORDER OF THE DATASET NAMES IN THE FILE
+#we also use a second method that is fully automated
+
+
+run_clustering &lt;- function(data, k){
+  library(broom) 
+  
+  # the first part does the silhouette method
+  
+  kmeans_result &lt;- data %&gt;% 
+    select(X_units, Y_units, Z_units) %&gt;% 
+    kmeans(k, nstart = 100) %&gt;% 
+    #augment is part of the broom package, attaches to the original data an output of whatever you did before
+    augment(data)
+  
+  # the second part uses an alternative clustering method that was suggested here at https://www.r-bloggers.com/finding-optimal-number-of-clusters/
+# it is based on Bayesian approaches (although not taking advantage of it)
+# this can be automated in the function described below and does not require inspection of the data
+
+  # the method requires the following library
+  library(mclust) 
+  #CAREFUL IT CONTAINS A MAP FUNCTION THAT CLASHES WITH THE dpr one so detach it after use (see below)
+
+  mclust_result &lt;- data %&gt;% 
+    select(X_units, Y_units, Z_units) %&gt;% 
+    #kmax defines the maximum number of clusters, by default 10
+    mclust::Mclust(G = 1:20) %&gt;% 
+    augment(kmeans_result)
+  
+  return(mclust_result)
+}
+
+
+root_1_clust &lt;- root_1 %&gt;%  as_tibble() %&gt;%
+  group_by(DatasetFilename, Cell) %&gt;% 
+  nest() %&gt;% 
+  mutate(k = c(11, 20, 6, 13)) %&gt;% 
+  mutate(kresult = map2(data, k, run_clustering)) %&gt;% 
+  select(-data) %&gt;% 
+  unnest(kresult)
+
+root_2_clust &lt;- root_2 %&gt;% as_tibble() %&gt;%
+  group_by(DatasetFilename, Cell) %&gt;% 
+  nest() %&gt;% 
+  mutate(k = c(6,8,20,12)) %&gt;% 
+  mutate(kresult = map2(data, k, run_clustering)) %&gt;% 
+  select(-data) %&gt;% 
+  unnest(kresult)
+
+#IMPORTANT, detach the library as it has function conflicts
+detach(package:mclust, unload = TRUE)
+
+# we now merge the two objects
+clusters &lt;- rbind(root_1_clust, root_2_clust)</code></pre>
+<p><br></p>
+</div>
+<div id="determining-median-numbers-of-clusters-per-cell" class="section level1">
+<h1>Determining median numbers of clusters per cell</h1>
+<p><br></p>
+<pre class="r"><code># we extract the number of clusters from the clusters object we generated
+# the .cluster column contains the clustering output of the Silhouette method
+
+clusters_sil &lt;- clusters %&gt;% 
+  # get rows with distinct values of these variables (no duplicates)
+  distinct(Genotype, Interface, DatasetFilename, Cell, .cluster) %&gt;% 
+  # count how many rows for each of these two variables
+  count(Genotype, Interface, DatasetFilename, Cell) %&gt;% 
+  mutate(Method = &quot;Silhouette&quot;)
+
+# the .class column contains the clustering output of the mclust method
+
+clusters_mc &lt;- clusters %&gt;% 
+  # get rows with distinct values of these variables (no duplicates)
+  distinct(Genotype, Interface, DatasetFilename, Cell, .class) %&gt;% 
+  # count how many rows for each of these two variables
+  count(Genotype, Interface, DatasetFilename, Cell) %&gt;% 
+  mutate(Method = &quot;Mclust&quot;)
+
+clusters_count &lt;- rbind(clusters_sil, clusters_mc)
+
+library(ggbeeswarm)
+
+clusters_count %&gt;%
+  ggplot(aes(x= Method, y=n, colour= Genotype, fill= Genotype)) + theme_bw() +
+  geom_violin(alpha=0.5) + 
+  stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
+               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
+  geom_quasirandom(data= clusters_count, aes(group=Genotype), colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
+  labs(y = &quot;n of clusters per cell&quot;) +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15)) +
+  scale_color_manual(values=c(&quot;#8B8B83&quot;, &quot;#008080&quot;)) +
+  scale_fill_manual(values=c(&quot;#8B8B83&quot;, &quot;#008080&quot;)) +
+  facet_grid(~Interface) </code></pre>
+<p><img src="clusters_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
+<p><br></p>
+</div>
+<div id="determining-median-number-of-plasmodesmata-per-cluster" class="section level1">
+<h1>Determining median number of plasmodesmata per cluster</h1>
+<pre class="r"><code># we count how many PDs are present in each cluster separately for the methods
+
+silh_count &lt;- clusters %&gt;% 
+  count(Genotype, Interface, DatasetFilename, Cell, .cluster) %&gt;%
+  mutate(Method = &quot;Silhouette&quot;)
+mclust_count &lt;- clusters %&gt;% 
+  count(Genotype, Interface, DatasetFilename, Cell, .class) %&gt;%
+  mutate(Method = &quot;Mclust&quot;)
+
+# we then merge the counts
+combined_count &lt;- rbind(silh_count[,-5], mclust_count[,-5])
+
+combined_count %&gt;%
+  ggplot(aes(x= Method, y=n, colour= Genotype, fill= Genotype)) + theme_bw() +
+  geom_violin(alpha=0.5) + 
+  # we use this geometry from the ggbeeswarm package
+  geom_quasirandom(data= combined_count, aes(group=Genotype), colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
+  stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
+               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
+  labs(y = &quot;n of PDs per cluster&quot;) +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15)) +
+  scale_color_manual(values=c(&quot;#8B8B83&quot;, &quot;#008080&quot;)) +
+  scale_fill_manual(values=c(&quot;#8B8B83&quot;, &quot;#008080&quot;)) +
+  facet_grid(~Interface) +
+  # we use a log scale to better visualise the range of data
+  scale_y_log10()</code></pre>
+<p><img src="clusters_files/figure-html/unnamed-chunk-5-1.png" width="672" /></p>
+<pre class="r"><code># for visualisations purposes (in Imaris/Amira) it can be convenient to have the cluster assignment results generated in R as a file output
+#set directory
+setwd(&#39;./Data_individual_cells&#39;)
+data.table::fwrite(clusters, &quot;clusters.csv&quot;)</code></pre>
+<p><br></p>
+<p>Now that we established which clusters exist on the interfaces of interest we can move on to the <a href="surfaces.html">next section</a></p>
+</div>
+
+
+
+</div>
+</div>
+
+</div>
+
+<script>
+
+// add bootstrap table styles to pandoc tables
+function bootstrapStylePandocTables() {
+  $('tr.header').parent('thead').parent('table').addClass('table table-condensed');
+}
+$(document).ready(function () {
+  bootstrapStylePandocTables();
+});
+
+
+</script>
+
+<!-- dynamically load mathjax for compatibility with self-contained -->
+<script>
+  (function () {
+    var script = document.createElement("script");
+    script.type = "text/javascript";
+    script.src  = "https://mathjax.rstudio.com/latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML";
+    document.getElementsByTagName("head")[0].appendChild(script);
+  })();
+</script>
+
+</body>
+</html>
