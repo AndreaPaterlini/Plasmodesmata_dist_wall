@@ -28,7 +28,7 @@ We have uploaded **Example datasets** to the Apollo data repository. Please down
 In the unzipped folder you will find a series of files of different types. Here is a snapshot image showing them
 
 <br>
-![](./img/data.tif){width=750}
+![](./img/data.TIF){width=750}
 
 <br>
 
