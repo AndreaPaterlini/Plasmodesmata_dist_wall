@@ -31,6 +31,18 @@ In the unzipped folder you will find a series of files of different types. Here 
 ![](./img/data.TIF){width=750}
 
 <br>
+![](img/data.TIF){width=750}
+
+<br>
+![](img/data.tif){width=750}
+
+<br>
+![](img/data.tif){width=750}
+
+<br>
+![](../img/data.tif){width=750}
+
+<br>
 
 In the folder there are datasets from 2 different Col-0 samples (WT *Arabidopsis thaliana* roots). The data associated with each sample are shown with the vertical brown and light blue bars in the image. For each of these two samples, multiple cells are provided. Each cell dataset has 3 files associated with it to start with (more will be generated as we go along the pipeline).
 
