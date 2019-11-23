@@ -40,7 +40,7 @@ In the unzipped folder you will find a series of files of different types. Here 
 ![](img/data.tif){width=750}
 
 <br>
-![](../img/data.tif){width=750}
+![](https://github.com/AndreaPaterlini/Plasmodesmata_dist_wall/blob/master/img/data.tif){width=750}
 
 <br>
 
