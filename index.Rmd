@@ -1,5 +1,5 @@
 ---
-title: "Data analysis pipeline in Paterlini, Belevich *et al.*, 2020"
+title: "Data analysis pipeline in Paterlini, Belevich *et al.*, (submitted)"
 author: "created by Andrea Paterlini"
 date: "*1st October 2019*"
 
@@ -9,14 +9,14 @@ date: "*1st October 2019*"
 
 Hello user!
 
-Welcome to the online resources for the Paterlini, Belevich *et al.*, 2019 paper. 
-The paper can be found at the journal website [here](actual link).
+Welcome to the online resources for the Paterlini, Belevich *et al.*, (submitted) paper. 
+The paper will be found at the journal website [(/to be addded when published)](actual link).
 
 These resources (in the form of plugins and scripts) have been developed to study Plasmodesmata, small channels that connect plant cells[^1]. Our goal was to extract information about their spatial distribution and cellular environment, as described in our paper.
 
 However, in principle, both the plugins and the pipelines can be more broadly applied and we are happy for people to get ideas from them, tweak them or repurpose them to better suit their specific needs. Should people do so, we request the developers to provide the corresponding annotated code on some open source platform, in order for the community to benefit from it.
 
-In this document, which was generated with R Markdown[^2], you will be guided through the specific data analysis steps performed in the paper. The raw files of this R Markdown are stored on my GitHub (AndreaPaterlini) at this [repository](actual link). You don't need them for the analysis process but you are welcome to look at them if you are interested in version control.
+In this document, which was generated with R Markdown[^2], you will be guided through the specific data analysis steps performed in the paper. The raw files of this R Markdown are stored on my GitHub (AndreaPaterlini) at this [repository](https://github.com/AndreaPaterlini/Plasmodesmata_dist_wall). You don't need them for the analysis process but you are welcome to look at them if you are interested in version control.
 
 The aim is for you to apply this pipeline (or parts of the same) to your own data. We provide some sample datasets here just for you to familiarise yourself with the various steps and scripts employed. 
 
