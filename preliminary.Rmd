@@ -27,20 +27,41 @@ We have uploaded **Example datasets** to the Apollo data repository. Please down
 
 In the unzipped folder you will find a series of files of different types. Here is a snapshot image showing them
 
+1
 <br>
 ![](./img/data.TIF){width=750}
 
+2
 <br>
 ![](img/data.TIF){width=750}
 
+3
 <br>
 ![](img/data.tif){width=750}
 
+4
 <br>
 ![](./img/data.tif){width=750}
 
+5
 <br>
-![](https://github.com/AndreaPaterlini/Plasmodesmata_dist_wall/blob/master/img/data.tif){width=750}
+![](./img/data.tif){width="750"}
+
+6
+<br>
+![](/img/data.tif){width=750}
+
+7
+<br>
+![](./img/data.tif){width="750"}
+
+8
+<br>
+![](src= "https://github.com/AndreaPaterlini/Plasmodesmata_dist_wall/blob/master/img/data.tif"){width=750}
+
+9
+<br>
+![](src= "https://github.com/AndreaPaterlini/Plasmodesmata_dist_wall/blob/master/img/data.tif"){width="750"}
 
 <br>
 
