@@ -20,7 +20,8 @@ In this document, which was generated with R Markdown[^2], you will be guided th
 
 The aim is for you to apply this pipeline (or parts of the same) to your own data. We provide some sample datasets here just for you to familiarise yourself with the various steps and scripts employed. 
 
-Please report bugs to andrea.paterlini@slcu.cam.ac.uk 
+Please report bugs in the R code to andrea.paterlini@slcu.cam.ac.uk 
+For comments directly related to the workings of the plugins please contact ilya.belevich@helsinki.fi 
 
 The work is under a GNU AGPLv3 open access license[^3]. Please compile with its conditions.
 
