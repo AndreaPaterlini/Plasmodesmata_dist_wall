@@ -30,7 +30,7 @@ From the MIB interface go to the *Plugins* tab -> *Plasmodesmata* -> *SpatialCon
 
 You should ultimately see something like the following, where a pink midline has appeared:
 
-![](img/wall_thinning.tif){width=800}
+![](./img/wall_thinning.png){width=800}
 
 # Extract real positions
 
@@ -54,7 +54,7 @@ Two are the output of the SpatialControlPoints plugin: a <i>\*_random_points.csv
 The fird file is a <i>\*_Ann.csv</i> file that contains the coordinates of the real points.
 
 <br>
-![](img/random_points.tif){width=700}
+![](./img/random_points.png){width=700}
 <br>
 
 If you want to analyse multiple datasets at the same, as we will do here, the processes described above need to be repeated for each *.am* file.

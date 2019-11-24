@@ -27,11 +27,6 @@ We have uploaded **Example datasets** to the Apollo data repository. Please down
 
 In the unzipped folder you will find a series of files of different types. Here is a snapshot image showing them
 
-1
-<br>
-![](./img/data.tif){width="750"}
-
-2
 <br>
 ![](./img/data.png){width="750"}
 
@@ -57,7 +52,7 @@ Once you have completed these tasks you should see the following view. Please no
 
 <br>
 
-![](img/loaded_data.tif){width=800}
+![](./img/loaded_data.png){width=800}
 
 <br>
 
