@@ -568,8 +568,7 @@ calculate_areas_class &lt;- function(x){
   return(area_of_clusters)
 }
 
-
-# we apply it, nesting the rest of the data
+# we apply it and we nest the results
 
 clusters_processed &lt;- clusters %&gt;% 
   group_by(DatasetFilename, Genotype, Interface, Cell) %&gt;% 
