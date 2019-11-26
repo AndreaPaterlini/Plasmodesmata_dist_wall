@@ -9,7 +9,7 @@ output:
 
 <br>
 
-In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the Spatial control plugin shown in the [Distributions section](#distributions.html). Since we detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, we ask: **Can we quantify parameters relating to these clusters, such as their number and their areas?**
+In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the *SpatialControlPoints* plugin shown in the [Distributions section](#distributions.html). Since we detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, we now ask: **Can we quantify parameters relating to these clusters, such as their number and their areas?**
 
 <br>
 

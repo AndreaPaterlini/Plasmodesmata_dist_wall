@@ -412,7 +412,7 @@ div.tocify {
 
 
 <p><br></p>
-<p>In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the Spatial control plugin shown in the <a href="#distributions.html">Distributions section</a>. Since we previously detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, we then quantified the number of these clusters of plasmodesmata we now ask: <strong>What proportions of the cellular surface do these clusters occupy</strong></p>
+<p>In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the Spatial control plugin shown in the <a href="#distributions.html">Distributions section</a>. Since we previously detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, and we then quantified the number of these clusters of plasmodesmata we now ask: <strong>What proportions of the cellular surface do these clusters occupy?</strong></p>
 <p><br></p>
 <div id="exploring-the-data" class="section level1">
 <h1>Exploring the data</h1>
@@ -591,7 +591,7 @@ area_for_method_class &lt;- clusters_processed %&gt;%
 clusters_unnested &lt;- bind_rows(area_for_method_class, area_for_method_sil)</code></pre>
 <p><br></p>
 </div>
-<div id="calculating-the-median-total-conductive-surface-of-an-interface-as" class="section level1">
+<div id="surf1" class="section level1">
 <h1>Calculating the median total conductive surface of an interface (as %)</h1>
 <p><br></p>
 <pre class="r"><code># we now ask how much of the total surface (the gray shaded area we calculated in previous steps) is occupied by PD clusters
@@ -618,7 +618,7 @@ ggplot(data=unique(clusters_unnested[, c(&quot;Genotype&quot;, &quot;Interface&q
 <p><img src="surfaces_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p><br></p>
 </div>
-<div id="calculating-the-median-surface-of-individual-clusters-as" class="section level1">
+<div id="surf2" class="section level1">
 <h1>Calculating the median surface of individual clusters (as %)</h1>
 <p><br></p>
 <pre class="r"><code># to calculate the surface of individual clusters independently we don&#39;t need to subset the data
@@ -646,6 +646,79 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 <div id="calculating-the-actual-surface-of-the-interface" class="section level1">
 <h1>Calculating the actual surface of the interface</h1>
 <p><br></p>
+<p>In this part we try to relate the percentages we calculated in the <a href="#surf1">sections above</a> to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the <em>Contacts3D</em> plugin. An earlier version of the plugin has actually been used in an earlier paper we published <a href="https://www.nature.com/articles/s41477-019-0429-5">Yan et al.(2019)</a></p>
+<p>If you downloaded a standalone version of MIB from the website then the plugins are already contained in the software. If you have dowloaded the Matlab version of the programme make sure you have download the plugins from <a href="actual%20link">here</a> and unzipped them in the <em>Plugin</em> folder of MIB. They will automatically appear in the scroll down list under the <em>Plugin</em> tab in the MIB interface. To launch MIB from the Matlab environment enter “mib” as a command. We will apply the <em>ContactArea3D</em> plugin in <a href="#run2">the next section</a>.</p>
+<p><br></p>
+</div>
+<div id="run2" class="section level1">
+<h1>Run the <em>ContactArea3D</em> plugin</h1>
+<p><br> Make sure you have loaded your datasets and models as described in the <a href="preliminary.html">Preliminary Steps section</a>. In this case annotations are not required.</p>
+<p>From the MIB interface go to the Plugins tab -&gt; Organelle Analysis -&gt; ContactArea3D. A user interface will appear with multiple fields to be filled in. There is also a help section available.</p>
+<p>For “XY smoothing”, “XY sampling” and “Z sampling” we imput values of <em>5, 5 and 1</em>. This creates an appropriate level of surface smoothing for the surface we are trying to generate and ensures a good yet computationally feasible sampling of our models to generate the surface itself. Clicking “Save results in” enables you to store the surface area values and by pressing “Filename for export” you can ensure that the format is <em>.csv</em>. “Export contact To Imaris” enables to send the surface to Imaris for 3D rendering.</p>
+<p>After pressing “Continue”, when the process has finished a new window will appear with the largest of surfaces calculated appearing in it.</p>
+<div class="figure">
+<img src="img/area.png" width="700" />
+
+</div>
+<p><br></p>
+</div>
+<div id="check-outputs" class="section level1">
+<h1>Check outputs</h1>
+<p><br></p>
+<p>If the plugin has worked correctly and you followed the instructions to calculate the surfaces of the models your <em>Data_individual_cells</em> folder should now contain one additional files.</p>
+<p>This is the output of the <em>ContactArea3D</em> plugin: a <i>*_ContactArea3D_wall.csv</i> file.</p>
+<p>In the files one object with a certain surface shoud be listed in most cases. However, please note that in certain cases (such as cases where shifts in the images are present) multiple objects might be detected. This is just because the software can’t generate a single objects but rather produces two objects separated by the section where the image shift occurred. Small wall sections can also generate additional smaller objects</p>
+<p><br> <img src="img/area_output.png" width="700" /></p>
+<p><br></p>
+<p>If you want to analyse multiple datasets at the same, as we will do here, the processes described above need to be repeated for each <em>.am</em> file.</p>
+<p><br></p>
+</div>
+<div id="processing-the-surfaces-in-r" class="section level1">
+<h1>Processing the surfaces in R</h1>
+<p><br></p>
+<pre class="r"><code>setwd(&#39;./Data_individual_cells&#39;)
+
+#first we read the files 
+Col_area &lt;- list.files(path = &quot;.&quot;, pattern = &quot;ContactArea3D_wall.csv&quot;) %&gt;%   map_df(function(f){
+        #this will print the dataset 
+    print(f) 
+    x &lt;- read.csv(f) %&gt;% 
+      as.data.frame %&gt;% 
+      mutate(DatasetFilename = f) %&gt;%
+      mutate(Genotype = &quot;Col-0&quot;) %&gt;%
+      mutate(Interface = &quot;PPP-EN&quot;) 
+  })    
+
+#we edit the text of the DatasetFilename column to clean it 
+Col_area$DatasetFilename &lt;- gsub(&quot;_ContactArea3D_wall.csv&quot;, &quot;&quot;, Col_area$DatasetFilename)</code></pre>
+<pre class="r"><code># because in some cases multiple objects were generated (despite having a single cellular interface) we merge those multiple objects into a single one
+Col_area_corrected &lt;- Col_area %&gt;% group_by(Genotype, Interface, DatasetFilename) %&gt;% dplyr::summarise(total_surface = sum(SurfaceArea, na.rm = TRUE))
+
+# we plot it
+library(ggbeeswarm)
+
+Col_area_corrected %&gt;%
+  ggplot(aes(x= Genotype, y=total_surface, colour= Genotype, fill= Genotype)) + theme_bw() +
+  geom_violin(alpha=0.5) + 
+  stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
+               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
+  geom_quasirandom(colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.5) +
+  labs(y = &quot;Surface area of the cell (um^2)&quot;) +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15)) +
+  scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
+  scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
+  facet_grid(~Interface) </code></pre>
+<p><img src="surfaces_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><br></p>
+<p>Using the median value of the surface and the median values of the percentages that we obtained <a href="#surf1">above</a> we can manually get estimates in um^2 of the conductive surface in cells and of the surface of the single clusters.</p>
+<p><br></p>
+<p>You have now completed this section: we have calculated the surfaces occupied by the clusters on our interfaces of interest. In the <a href="wall.html">next section</a> we will ask questions about the wall environment plasmodesmata lie within.</p>
 </div>
 
 

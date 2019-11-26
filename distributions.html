@@ -412,11 +412,11 @@ div.tocify {
 
 
 <p><br></p>
-<p>In this section we are now going to use the the plugins we developed for the Paterlini, Belevich et al. paper. The first question we will try to address concerns the distribution of Plasmodesmata (or similar types of annotations along a given model). We start by asking: <strong>Is there a bias in how plasmodesmata are distributed over a cellular interface?</strong></p>
+<p>In this section we are now going to use the first plugin we developed for the Paterlini, Belevich et al. paper: the <em>SpatialControlPoints</em> plugin. The biological question we will try to address with this tool relates to the distribution of Plasmodesmata (or similar types of annotations along a given model). We start by asking: <strong>Is there a bias in how plasmodesmata are distributed over a cellular interface?</strong></p>
 <p>If you downloaded a standalone version of MIB from the website then the plugins are already contained in the software. If you have dowloaded the Matlab version of the programme make sure you have download the plugins from <a href="actual%20link">here</a> and unzipped them in the <em>Plugin</em> folder of MIB. They will automatically appear in the scroll down list under the <em>Plugin</em> tab in the MIB interface. To launch MIB from the Matlab environment enter “mib” as a command. We will apply these plugins in <a href="#run">the next section</a>.</p>
 <p><br></p>
 <div id="run" class="section level1">
-<h1>Run the SpatialControlPoints plugin</h1>
+<h1>Run the <em>SpatialControlPoints</em> plugin</h1>
 <p><br></p>
 <p>Make sure you have loaded your datasets, models and annotations as described in in the <a href="preliminary.html">Preliminary Steps section</a>.</p>
 <p>From the MIB interface go to the <em>Plugins</em> tab -&gt; <em>Plasmodesmata</em> -&gt; <em>SpatialControlPoints</em>. A user interface will appear with four fields to be filled in.</p>
@@ -438,7 +438,7 @@ div.tocify {
 <h1>Check outputs</h1>
 <p><br></p>
 <p>If the plugin has worked correctly and you followed the instructions to export the coordinates of your real points your <em>Data_individual_cells</em> folder should now contain three additional files.</p>
-<p>Two are the output of the SpatialControlPoints plugin: a <i>*_random_points.csv</i> and a <i>*_random_points.mat</i>. Both files contain the same data but in two different formats. People confident with Matlab are more than welcome to use that format, here we will proceed with the <em>.csv</em> format.</p>
+<p>Two are the output of the <em>SpatialControlPoints</em> plugin: a <i>*_random_points.csv</i> and a <i>*_random_points.mat</i>. Both files contain the same data but in two different formats. People confident with Matlab are more than welcome to use that format, here we will proceed with the <em>.csv</em> format.</p>
 <p>The fird file is a <i>*_Ann.csv</i> file that contains the coordinates of the real points.</p>
 <p><br> <img src="img/random_points.png" width="700" /> <br></p>
 <p>If you want to analyse multiple datasets at the same, as we will do here, the processes described above need to be repeated for each <em>.am</em> file.</p>

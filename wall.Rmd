@@ -8,3 +8,165 @@ output:
 ---
 
 <br>
+
+In this section we shift to a different biological question and we employ the last plugin developed for the Paterlini, Belevich et al. paper. Using the *CellWallThickness* plugin we will try to address the biological question of cell wall thickness around Plasmodesmata (or similar types of annotations along a given model). We ask: **Is the cell wall in proximity of plasmodesmata different (in terms of thickness) compared to the wall average?**
+
+If you downloaded a standalone version of MIB from the website then the plugins are already contained in the software. If you have dowloaded the Matlab version of the programme make sure you have download the plugins from [here](actual link) and unzipped them in the *Plugin* folder of MIB. They will automatically appear in the scroll down list under the *Plugin* tab in the MIB interface. To launch MIB from the Matlab environment enter "mib" as a command. We will apply the *CellWallthickness* plugins in [the next section](#run3). 
+
+<br>
+
+# Run the *CellWallThickness* plugin {#run3} 
+
+<br>
+
+Make sure you have loaded your datasets, models and annotations as described in in the [Preliminary Steps section](preliminary.html).  
+
+From the MIB interface go to the *Plugins* tab -> *Plasmodesmata* -> *CellWallThickness*. A user interface will appear with fields to be filled in. 
+
+*Thin and remove branches* button within the pre-processing box generates a midline of the model (in presence of branching points, keeps the longest branch) and temporarily stores it in the Mask layer of the *.model* file. For more details please see the paper. 
+
+In the option box various parameters can be selected: 
+"Analysis of pores" calculates the cell wall thickness in proximity of the plasmodesmata (or any other provided annotation), in addition to measuring the wall thickness at all positions on the midline of the model. 
+"Analysis of randomly placed pores" calculates the cell wall thickness at control points (uniformly distributed over the same provided model) equal in number to the annotations provided. "Random number generator id" enables to reproduce results for the controls (generating the same random distributions for that particular model). The same id number needs to be used for such purpose. Every time you will run the plugin - on the same dataset - with that number you will obtain the same control points.
+In order to make the data classes (real or "closest" points, the random "simulated" points, and "all points") independent, you need to press "Remove data points from all points" and "Remove random points from all points". This ensures that no point from those classes will be included in the other class. "Mark the distances" displays on the model the distance vectors that are being measured (at plasmodesmata and control positions). 
+
+Note: if you were to compare the overall cell wall thickness between interfaces (as performed in the paper) you would need to leave all boxes from the option section unclicked.
+
+![](./img/wall.png){width=700}
+
+<br>
+
+After pressing "Continue", when the process has finished a new window will appear with visual plots of the wall thickness values for the various categories being requested.
+
+<br>
+
+# Check outputs
+
+<br>
+
+If the plugin has worked correctly and you followed the instructions to calculate the thicknesses at the positions of interest in the models your Data_individual_cells folder should now contain three additional files.
+
+One is <i>\*_CellWallThickness_info.txt</i> which is a text document containing info on the datasets. We won't use this file. There is a <i>\*_CellWallThickness.csv</i> file which contains the cell wall thicknesses at real and at an equal number of uniformly distributed control points. The third file <i>\*_CellWallThickness_allPoints.csv</i> contains the cell wall thickness at every single point at the midline of our cell wall model.
+
+<br>
+![](./img/wall_output.png){width=700}
+
+<br>
+
+If you want to analyse multiple datasets at the same, as we will do here, the processes described above need to be repeated for each *.am* file.
+
+<br>
+
+# Processing the thicknesses in R
+
+<br>
+
+```{r, message = FALSE, warning= FALSE}
+
+library(tidyverse)
+setwd('./Data_individual_cells')
+
+#first we can read the files containing all the points (or all other points depending on which options were selected)
+Col_allwall <- list.files(path = ".", pattern = "CellWallThickness_allPoints.csv") %>%   map_df(function(f){
+    x <- read.csv(f) %>% 
+      as.data.frame %>% 
+      mutate(DatasetFilename = f) %>%
+      mutate(Genotype = "Col-0") %>%
+      mutate(Interface = "PPP-EN") %>%
+      mutate(Positions = "All others")
+  })    
+
+#we edit the text of the DatasetFilename column to clean it 
+Col_allwall$DatasetFilename <- gsub("_CellWallThickness_allPoints.csv", "", Col_allwall$DatasetFilename)
+
+# we rename the thickness column 
+
+library(data.table)
+
+Col_allwall <- Col_allwall %>% setnames(old = c('Matrix.of.cell.wall.thickness.values.in.micrometers.for.each.point.of.the.masked.centreline'), new = c('Thickness_um'))
+
+# now we read the files containing thicknesses at real and control points
+
+Col_wall <- list.files(path = ".", pattern = "CellWallThickness.csv") %>%   map_df(function(f){
+    x <- read.csv(f) %>% 
+      as.data.frame %>% 
+      mutate(DatasetFilename = f) %>%
+      mutate(Genotype = "Col-0") %>%
+      mutate(Interface = "PPP-EN")
+  })    
+
+#we edit the text of the DatasetFilename column to clean it 
+Col_wall$DatasetFilename <- gsub("_CellWallThickness.csv", "", Col_wall$DatasetFilename)
+
+# we select the data relating to Pd positions (real) 
+
+Col_wall_pd <- select(Col_wall, "Genotype", "Interface", "DatasetFilename", "WallThicknessRealPores_um") %>% 
+  # we rename the thickness column so that it will match with the one from all points
+  setnames(old = c('WallThicknessRealPores_um'), new = c('Thickness_um')) %>%
+  # we create a column describing the type of data
+  mutate(Positions = "PDs")
+
+# we do the same for simulated points
+
+Col_wall_sim <- select(Col_wall, "Genotype", "Interface", "DatasetFilename", "WallThicknessRandomPores_um") %>% 
+  setnames(old = c('WallThicknessRandomPores_um'), new = c('Thickness_um')) %>%
+  mutate(Positions = "Rand. Unif. distributed") 
+
+# we merge the two 
+
+Col_0 <- rbind(Col_wall_pd, Col_wall_sim, Col_allwall)
+
+# we create a new column with the wall thickness in nm (a better unit for this biological scale) and we also impose an order on the Position classes for visual purposes
+
+Col_0 <- Col_0 %>%
+  mutate("Thickness_nm" = Thickness_um*1000) %>%  
+  mutate(Positions = factor(Positions, levels = c("PDs", "Rand. Unif. distributed", "All others")))
+
+#we are now going to separate the dataset file name in two columns, one containing info on the root and one containing info on the actual cell
+# we are going to duplicate the dataset column first
+Col_0$Cell = Col_0$DatasetFilename
+
+#we are splitting the column just before "PPP" therefore taking _ as well 
+# and retains first part of the split (it takes some time)
+library(stringr)
+Col_0$DatasetFilename <- sapply(str_split(Col_0$DatasetFilename, ".PPP"), head, 1)
+
+# in the column cell we remove anything before the name of the cell
+Col_0$Cell <- gsub(".*PPP", "PPP", Col_0$Cell)
+
+# we summarise the values of thickness for each cell
+
+stats <- Col_0 %>% 
+  group_by(Genotype, Interface, DatasetFilename, Cell, Positions) %>% 
+  dplyr::summarise(mean_thickness = mean(Thickness_nm))
+
+# plot 
+
+# we introduce a dodge graphical parameter to better space the groups
+dodge <- position_dodge(width = 0.4)
+
+library("ggbeeswarm")
+
+ggplot(Col_0, aes(x = Positions, y = Thickness_nm, fill=Positions, colour=Positions)) + theme_bw() +
+  geom_violin(alpha=0.25) +
+  stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
+              geom = "crossbar", size = 0.3, width = 0.4, alpha=1) +
+  stat_summary(data=stats, aes(x = Positions, y = mean_thickness), fun.y = median, fun.ymin = median, fun.ymax = median,
+               geom = "crossbar", size = 0.3, width = 0.4, colour="black", alpha=1) +
+  geom_quasirandom(data=stats, aes(x = Positions, y = mean_thickness, shape=DatasetFilename), width = 0.2, size= 2, colour="black", alpha=0.5) +
+  labs(x = "Positions", y = "Wall thickness (nm)") + 
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.position = "none")  + 
+  scale_y_log10() + 
+  facet_grid(~Interface)
+
+
+```
+
+We have reached the end of this guided pipeline. We hope you will employ the tools we developed for the Plasmodesmata community. Please feel free to share feedback! 
+
+Good luck with your research!
