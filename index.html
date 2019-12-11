@@ -321,13 +321,42 @@ $(document).ready(function () {
 <p>Welcome to the online resources for the Paterlini, Belevich <em>et al.</em>, (submitted) paper. The paper will be found at the journal website <a href="actual%20link">(/to be addded when published)</a>.</p>
 <p>These resources (in the form of plugins and scripts) have been developed to study Plasmodesmata, small channels that connect plant cells<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>. Our goal was to extract information about their spatial distribution and cellular environment, as described in our paper.</p>
 <p>However, in principle, both the plugins and the pipelines can be more broadly applied and we are happy for people to get ideas from them, tweak them or repurpose them to better suit their specific needs. Should people do so, we request the developers to provide the corresponding annotated code on some open source platform, in order for the community to benefit from it.</p>
-<p>In this document, which was generated with R Markdown<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>, you will be guided through the specific data analysis steps performed in the paper. The raw files of this R Markdown are stored on my GitHub (AndreaPaterlini) at this <a href="https://github.com/AndreaPaterlini/Plasmodesmata_dist_wall">repository</a>. You don’t need them for the analysis process but you are welcome to look at them if you are interested in version control.</p>
+<p>In this document, which was generated with R Markdown<a href="#fn2" class="footnoteRef" id="fnref2"><sup>2</sup></a>, you will be guided through the specific data analysis steps performed in the paper. The raw files of this R Markdown are stored on my GitHub (AndreaPaterlini) at this <a href="https://github.com/AndreaPaterlini/Plasmodesmata_dist_wall">repository</a>. You don’t need them for the analysis process but you are welcome to look at them if you are interested in the source code.</p>
 <p>The aim is for you to apply this pipeline (or parts of the same) to your own data. We provide some sample datasets here just for you to familiarise yourself with the various steps and scripts employed.</p>
-<p>Please report bugs in the R code to <a href="mailto:andrea.paterlini@slcu.cam.ac.uk">andrea.paterlini@slcu.cam.ac.uk</a> For comments directly related to the workings of the plugins please contact <a href="mailto:ilya.belevich@helsinki.fi">ilya.belevich@helsinki.fi</a></p>
-<p>The work is under a GNU AGPLv3 open access license<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>. Please compile with its conditions.</p>
-<p>We thank Hugo Tavares (SLCU - University of Cambridge) for his kind help in setting up this website and repository.</p>
 <p>When you are ready please move to the <a href="preliminary.html">Preliminary steps section</a></p>
 <p><br></p>
+<div id="outline-of-the-sections" class="section level1">
+<h1>Outline of the sections</h1>
+<p><br></p>
+<ul>
+<li><a href="preliminary.html">Preliminary steps</a> <strong>details the required software, data and libraries</strong></li>
+<li><a href="distributions.html">Spatial distributions</a> <strong>looks for patterns for how PDs are distributed over a cellular interface</strong></li>
+<li><a href="clusters.html">Cluster numbers</a> <strong>quantifies parameters of the detected PD clusters, such as their number per interface</strong></li>
+<li><a href="surfaces.html">Surface areas</a> <strong>calculates what proportions of the cellular surface these clusters occupy</strong></li>
+<li><a href="wall.html">Wall thickness</a> <strong>looks for differences in thickness of the cell wall in proximity of plasmodesmata</strong></li>
+</ul>
+<p><br></p>
+</div>
+<div id="contacts" class="section level1">
+<h1>Contacts</h1>
+<p><br></p>
+<p>Please report issues concerning the R code present on this website by opening a new issue on our repository (alternatively, please e-mail <a href="mailto:andrea.paterlini@slcu.cam.ac.uk">andrea.paterlini@slcu.cam.ac.uk</a>). Suggestions are also warmly welcomed.</p>
+<p>For comments directly related to the workings of the plugins please contact <a href="mailto:ilya.belevich@helsinki.fi">ilya.belevich@helsinki.fi</a></p>
+<p><br></p>
+</div>
+<div id="license-and-citation" class="section level1">
+<h1>License and Citation</h1>
+<p><br></p>
+<p>The work is under a GNU AGPLv3 open access license<a href="#fn3" class="footnoteRef" id="fnref3"><sup>3</sup></a>. Please compile with its conditions.</p>
+<p>When using or editing the resources developed here please reference the paper and link to the github of <a href="https://github.com/AndreaPaterlini">Andrea Paterlini</a>.</p>
+<p><br></p>
+</div>
+<div id="acknowledgements" class="section level1">
+<h1>Acknowledgements</h1>
+<p><br></p>
+<p>We thank <a href="https://github.com/tavareshugo">Hugo Tavares</a> from <a href="https://www.slcu.cam.ac.uk/people/tavares-hugo">SLCU - University of Cambridge</a> for his kind help in setting up this website and repository. Check out his github repositories and profile.</p>
+<p><br></p>
+</div>
 <div class="footnotes">
 <hr />
 <ol>

@@ -16,19 +16,51 @@ These resources (in the form of plugins and scripts) have been developed to stud
 
 However, in principle, both the plugins and the pipelines can be more broadly applied and we are happy for people to get ideas from them, tweak them or repurpose them to better suit their specific needs. Should people do so, we request the developers to provide the corresponding annotated code on some open source platform, in order for the community to benefit from it.
 
-In this document, which was generated with R Markdown[^2], you will be guided through the specific data analysis steps performed in the paper. The raw files of this R Markdown are stored on my GitHub (AndreaPaterlini) at this [repository](https://github.com/AndreaPaterlini/Plasmodesmata_dist_wall). You don't need them for the analysis process but you are welcome to look at them if you are interested in version control.
+In this document, which was generated with R Markdown[^2], you will be guided through the specific data analysis steps performed in the paper. The raw files of this R Markdown are stored on my GitHub (AndreaPaterlini) at this [repository](https://github.com/AndreaPaterlini/Plasmodesmata_dist_wall). You don't need them for the analysis process but you are welcome to look at them if you are interested in the source code.
 
 The aim is for you to apply this pipeline (or parts of the same) to your own data. We provide some sample datasets here just for you to familiarise yourself with the various steps and scripts employed. 
 
-Please report bugs in the R code to andrea.paterlini@slcu.cam.ac.uk 
+When you are ready please move to the [Preliminary steps section](preliminary.html)
+
+<br>
+
+# Outline of the sections
+
+<br>
+
+* [Preliminary steps](preliminary.html) **details the required software, data and libraries**
+* [Spatial distributions](distributions.html) **looks for patterns for how PDs are distributed over a cellular interface**
+* [Cluster numbers](clusters.html) **quantifies parameters of the detected PD clusters, such as their number per interface**
+* [Surface areas](surfaces.html) **calculates what proportions of the cellular surface these clusters occupy**
+* [Wall thickness](wall.html) **looks for differences in thickness of the cell wall in proximity of plasmodesmata**
+
+<br>
+
+# Contacts 
+
+<br>
+
+Please report issues concerning the R code present on this website by opening a new issue on our repository (alternatively, please e-mail andrea.paterlini@slcu.cam.ac.uk). Suggestions are also warmly welcomed.
+
 For comments directly related to the workings of the plugins please contact ilya.belevich@helsinki.fi 
+
+<br>
+
+# License and Citation 
+
+<br>
 
 The work is under a GNU AGPLv3 open access license[^3]. Please compile with its conditions.
 
-We thank Hugo Tavares (SLCU - University of Cambridge) for his kind help in setting up this website and repository.
+When using or editing the resources developed here please reference the paper and link to the github of [Andrea Paterlini](https://github.com/AndreaPaterlini).
 
+<br>
 
-When you are ready please move to the [Preliminary steps section](preliminary.html)
+# Acknowledgements 
+
+<br>
+
+We thank [Hugo Tavares](https://github.com/tavareshugo) from [SLCU - University of Cambridge](https://www.slcu.cam.ac.uk/people/tavares-hugo) for his kind help in setting up this website and repository. Check out his github repositories and profile.
 
 <br>
 

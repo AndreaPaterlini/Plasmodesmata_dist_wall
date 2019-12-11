@@ -9,7 +9,7 @@ output:
 
 <br>
 
-In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the *SpatialControlPoints* plugin shown in the [Distributions section](#distributions.html). Since we detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, we now ask: **Can we quantify parameters relating to these clusters, such as their number and their areas?**
+In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the *SpatialControlPoints* plugin shown in the [Distributions section](#distributions.html). Since we detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, we now ask: **Can we quantify parameters relating to these clusters, such as their number**
 
 <br>
 
@@ -18,9 +18,9 @@ In this section we continue to ask questions about the distribution of Plasmodes
 ```{r, include = FALSE}
 
 # THIS SECTION IS HIDDEN AND ONLY REQUIRED BECAUSE KNITTING TREATS R MARKDOWNS INDEPENDENTLY so it is not possible to call variables present in another markdown
+# we need to re-create the Col_real object
 
 library(tidyverse)
-library(data.table)
 
 setwd('./Data_individual_cells')
 
@@ -32,7 +32,9 @@ Col_real <- list.files(path = ".", pattern = "Ann.csv") %>%
       # we need to select only the columns where the coordinates were recalculated relative to the bounding box
       subset(select = c(LabelPositionXunits, LabelPositionYunits, LabelPositionZunits)) %>% 
       # for compatibility with the Col_simulated we need to have the same labels on the columns
-      setnames(old = c('LabelPositionXunits','LabelPositionYunits', 'LabelPositionZunits'), new = c('X_units','Y_units', 'Z_units')) %>%
+      rename("X_units"="LabelPositionXunits") %>%
+      rename("Y_units"="LabelPositionYunits") %>%
+      rename("Z_units"="LabelPositionZunits") %>% 
       mutate(Genotype = "Col-0") %>%
       mutate(DatasetFilename = f) %>%
       mutate(Interface = "PPP-EN") %>%
@@ -42,26 +44,41 @@ Col_real <- list.files(path = ".", pattern = "Ann.csv") %>%
 
 Col_real$DatasetFilename <- gsub("_Ann.csv", "", Col_real$DatasetFilename)
 
+# we also set the general plotting theme
+# where we need to deviate from this it is shown in the code
+
+theme_set(
+  theme_bw() + 
+      theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15))  
+)
+
+
 ```
 
 <br>
 
 ```{r, message = FALSE, warning= FALSE}
 
-# we are only going to use the coordinates of the real points in this case 
-# so we will start from the Col_real object
+library(tidyverse)
+library(factoextra)
+
+# we are only going to use the coordinates of the real points in this case so we start from the Col_real object
+# please note that this object is being carried over from the analysis that was performed in previous sections
 
 # we need to look at each cell individually before we run the function described later on
-# so we need to filter the original file 
-# it is actually easier to split the larger file into smaller datasets corresponding to different roots for example.
+# we filter the original file and we split the larger file into smaller datasets corresponding to different roots for example (easier to handle).
 
-# we are going to duplicate the dataset column first
+# we are going to duplicate the dataset column first (similar to what was done for the Col_0 object in previous section)
 Col_real$Cell = Col_real$DatasetFilename
 
-#we are splitting the column just before "PPP" therefore taking _ as well 
-# and retains first part of the split (it takes some time)
-library(stringr)
-Col_real$DatasetFilename <- sapply(str_split(Col_real$DatasetFilename, ".PPP"), head, 1)
+#in the dataset filename column we remove anything after _DNN
+Col_real$DatasetFilename <- gsub("_PPP.*","", Col_real$DatasetFilename)
 
 # in the column cell we remove anything before the name of the cell
 Col_real$Cell <- gsub(".*PPP", "PPP", Col_real$Cell)
@@ -78,8 +95,6 @@ PPP1_EN <- filter(root_1, Cell == "PPP1-EN")
 
 #The following piece of code has been copied from 
 # http://www.sthda.com/english/articles/29-cluster-validation-essentials/96-determining-the-optimal-number-of-clusters-3-must-know-methods/
-
-library(factoextra)
 
 # Silhouette method
 fviz_nbclust(PPP1_EN[,c("X_units", "Y_units", "Z_units")], kmeans, method = "silhouette", nstart = 100, k.max=20) +
@@ -123,14 +138,15 @@ fviz_cluster(my_kmeans, data = PPP1_EN[,c("X_units", "Y_units", "Z_units")], mai
 
 ```{r, message = FALSE, warning= FALSE}
 
+library(broom) 
+library(mclust) 
+
 # we create a function that will calculate the number of clusters and/or append them to the object. For the silhouette method, because we can't extract directly the number of cluster from the image the command generates we need to manually supply a vector k containing the values for the grouping (that is why we explored the data above). 
 # MAKE SURE VECTOR NUMBERS ARE IN THE ORDER OF THE DATASET NAMES IN THE FILE
 #we also use a second method that is fully automated
 
-
 run_clustering <- function(data, k){
-  library(broom) 
-  
+
   # the first part does the silhouette method
   
   kmeans_result <- data %>% 
@@ -143,8 +159,7 @@ run_clustering <- function(data, k){
 # it is based on Bayesian approaches (although not taking advantage of it)
 # this can be automated in the function described below and does not require inspection of the data
 
-  # the method requires the following library
-  library(mclust) 
+  # the method requires the mclust library
   #CAREFUL IT CONTAINS A MAP FUNCTION THAT CLASHES WITH THE dpr one so detach it after use (see below)
 
   mclust_result <- data %>% 
@@ -155,7 +170,6 @@ run_clustering <- function(data, k){
   
   return(mclust_result)
 }
-
 
 root_1_clust <- root_1 %>%  as_tibble() %>%
   group_by(DatasetFilename, Cell) %>% 
@@ -188,6 +202,8 @@ clusters <- rbind(root_1_clust, root_2_clust)
 
 ```{r, message = FALSE, warning= FALSE}
 
+#library(ggbeeswarm) called in the function so no need to load it
+
 # we extract the number of clusters from the clusters object we generated
 # the .cluster column contains the clustering output of the Silhouette method
 
@@ -209,22 +225,13 @@ clusters_mc <- clusters %>%
 
 clusters_count <- rbind(clusters_sil, clusters_mc)
 
-library(ggbeeswarm)
-
 clusters_count %>%
-  ggplot(aes(x= Method, y=n, colour= Genotype, fill= Genotype)) + theme_bw() +
+  ggplot(aes(x= Method, y=n, colour= Genotype, fill= Genotype)) +
   geom_violin(alpha=0.5) + 
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = "crossbar", size = 0.5, width = 0.3, alpha=1)  + 
-  geom_quasirandom(data= clusters_count, aes(group=Genotype), colour="black", fill="black", size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
+  ggbeeswarm::geom_quasirandom(data= clusters_count, aes(group=Genotype), colour="black", fill="black", size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
   labs(y = "n of clusters per cell") +
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15), 
-        legend.title = element_text(size = 15),
-        legend.text = element_text(size = 15)) +
   scale_color_manual(values=c("#8B8B83", "#008080")) +
   scale_fill_manual(values=c("#8B8B83", "#008080")) +
   facet_grid(~Interface) 
@@ -236,6 +243,9 @@ clusters_count %>%
 # Determining median number of plasmodesmata per cluster
 
 ```{r, message = FALSE, warning= FALSE}
+
+#library(ggbeeswarm) called in the function so no need to load it
+#library(data.table) called in the function so no need to load it
 
 # we count how many PDs are present in each cluster separately for the methods
 
@@ -250,20 +260,13 @@ mclust_count <- clusters %>%
 combined_count <- rbind(silh_count[,-5], mclust_count[,-5])
 
 combined_count %>%
-  ggplot(aes(x= Method, y=n, colour= Genotype, fill= Genotype)) + theme_bw() +
+  ggplot(aes(x= Method, y=n, colour= Genotype, fill= Genotype)) + 
   geom_violin(alpha=0.5) + 
   # we use this geometry from the ggbeeswarm package
-  geom_quasirandom(data= combined_count, aes(group=Genotype), colour="black", fill="black", size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
+  ggbeeswarm::geom_quasirandom(data= combined_count, aes(group=Genotype), colour="black", fill="black", size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = "crossbar", size = 0.5, width = 0.3, alpha=1)  + 
   labs(y = "n of PDs per cluster") +
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15), 
-        legend.title = element_text(size = 15),
-        legend.text = element_text(size = 15)) +
   scale_color_manual(values=c("#8B8B83", "#008080")) +
   scale_fill_manual(values=c("#8B8B83", "#008080")) +
   facet_grid(~Interface) +
@@ -271,6 +274,7 @@ combined_count %>%
   scale_y_log10()
 
 # for visualisations purposes (in Imaris/Amira) it can be convenient to have the cluster assignment results generated in R as a file output
+
 #set directory
 setwd('./Data_individual_cells')
 data.table::fwrite(clusters, "clusters.csv")

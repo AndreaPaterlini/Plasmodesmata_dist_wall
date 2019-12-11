@@ -11,7 +11,7 @@
 
 
 
-<title>Surfaces</title>
+<title>Surface areas</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -406,7 +406,7 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Surfaces</h1>
+<h1 class="title toc-ignore">Surface areas</h1>
 
 </div>
 
@@ -417,7 +417,13 @@ div.tocify {
 <div id="exploring-the-data" class="section level1">
 <h1>Exploring the data</h1>
 <p><br></p>
-<pre class="r"><code># we loook at one one cell as an example
+<pre class="r"><code>library(tidyverse)
+library(broom)
+#library(splancs) called in the function so no need to load it
+#library(ggbeeswarm) called in the function so no need to load it
+
+# we loook at one one cell as an example
+# please note that the clusters object is being carried over from the analysis that was performed in previous sections
 
 cluster_example &lt;- clusters %&gt;% filter(DatasetFilename == &quot;170314_Col_HD_R20_339-381um_DNN&quot; &amp; Cell == &quot;PPP1-EN&quot;)
 
@@ -465,18 +471,11 @@ total_chull &lt;- cluster_example %&gt;%
 
 # we visualise the results, in this case for the silhouette method
 
-ggplot(cluster_example, aes(PC1, PC2)) + theme_bw() +
+ggplot(cluster_example, aes(PC1, PC2)) +
   geom_point(data = cluster_example, aes(colour=.cluster, fill=.cluster)) +
   geom_polygon(data = total_chull, alpha = 0.09) +
   geom_polygon(data = cluster_chull_sil, aes(colour=.cluster, fill = .cluster), alpha = 0.3) +
-  xlab(&quot;PC1 (78.5%)&quot;) + ylab(&quot;PC2 (20.5%)&quot;) + 
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15),
-        legend.text = element_text(size = 15),
-        legend.title = element_text(size = 15)) +
+  xlab(&quot;PC1 (78.5%)&quot;) + ylab(&quot;PC2 (20.5%)&quot;) +
   labs(fill = &quot;Silhouette \n clusters&quot;, colour = &quot;Silhouette \n clusters&quot;)</code></pre>
 <p><img src="surfaces_files/figure-html/unnamed-chunk-2-1.png" width="672" /></p>
 <pre class="r"><code># you will notice that this is nearly identical to the fviz function results
@@ -599,19 +598,12 @@ clusters_unnested &lt;- bind_rows(area_for_method_class, area_for_method_sil)</c
 # for plotting you need to isolate the unique value for each cell (otherwise each cluster will be counted as a point altering the shape of distribution).
 #the easiest way is to subset the dataset only for relevant columns and then use unique
 
-ggplot(data=unique(clusters_unnested[, c(&quot;Genotype&quot;, &quot;Interface&quot;, &quot;DatasetFilename&quot;, &quot;Cell&quot;, &quot;perc_tot&quot;, &quot;Method&quot;)]), aes(x= Method, y=perc_tot, colour= Genotype, fill= Genotype)) + theme_bw() +
+ggplot(data=unique(clusters_unnested[, c(&quot;Genotype&quot;, &quot;Interface&quot;, &quot;DatasetFilename&quot;, &quot;Cell&quot;, &quot;perc_tot&quot;, &quot;Method&quot;)]), aes(x= Method, y=perc_tot, colour= Genotype, fill= Genotype)) +
   geom_violin(alpha=0.5)+ 
   ggbeeswarm::geom_quasirandom(aes(group=Genotype), colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
   labs(y = &quot;% of interface surface overall occupied by PD clusters&quot;) +
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15), 
-        legend.title = element_text(size = 15),
-        legend.text = element_text(size = 15)) +
   scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
   scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
   facet_grid(~Interface) </code></pre>
@@ -623,19 +615,12 @@ ggplot(data=unique(clusters_unnested[, c(&quot;Genotype&quot;, &quot;Interface&q
 <p><br></p>
 <pre class="r"><code># to calculate the surface of individual clusters independently we don&#39;t need to subset the data
 
-ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotype)) + theme_bw() +
+ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotype)) +
   geom_violin(alpha=0.5)+ 
   ggbeeswarm::geom_quasirandom(aes(group=Genotype), colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
   labs(y = &quot;% of interface surface occupied by individual PD clusters&quot;) +
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15), 
-        legend.title = element_text(size = 15),
-        legend.text = element_text(size = 15)) +
   scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
   scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
   facet_grid(~Interface) +
@@ -647,7 +632,6 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 <h1>Calculating the actual surface of the interface</h1>
 <p><br></p>
 <p>In this part we try to relate the percentages we calculated in the <a href="#surf1">sections above</a> to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the <em>Contacts3D</em> plugin. An earlier version of the plugin has actually been used in an earlier paper we published <a href="https://www.nature.com/articles/s41477-019-0429-5">Yan et al.(2019)</a></p>
-<p>If you downloaded a standalone version of MIB from the website then the plugins are already contained in the software. If you have dowloaded the Matlab version of the programme make sure you have download the plugins from <a href="actual%20link">here</a> and unzipped them in the <em>Plugin</em> folder of MIB. They will automatically appear in the scroll down list under the <em>Plugin</em> tab in the MIB interface. To launch MIB from the Matlab environment enter “mib” as a command. We will apply the <em>ContactArea3D</em> plugin in <a href="#run2">the next section</a>.</p>
 <p><br></p>
 </div>
 <div id="run2" class="section level1">
@@ -676,13 +660,33 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 <div id="processing-the-surfaces-in-r" class="section level1">
 <h1>Processing the surfaces in R</h1>
 <p><br></p>
-<pre class="r"><code>setwd(&#39;./Data_individual_cells&#39;)
+<pre class="r"><code># THIS SECTION IS HIDDEN AND ONLY REQUIRED FOR KNITTING PURPOSES
+# BECAUSE WE DON&#39;T WANT TO SHOW SETWD FUNCTION (as the path would likely be different on the computer of a user, we mirror the first part of the script and run it in a hidden chunk. The chunk diplayed will actally be idle, showing the code but not run
+
+setwd(&#39;./Data_individual_cells&#39;)
 
 #first we read the files 
 Col_area &lt;- list.files(path = &quot;.&quot;, pattern = &quot;ContactArea3D_wall.csv&quot;) %&gt;%   map_df(function(f){
         #this will print the dataset 
     print(f) 
-    x &lt;- read.csv(f) %&gt;% 
+    x &lt;- read_csv(f) %&gt;% 
+      as.data.frame %&gt;% 
+      mutate(DatasetFilename = f) %&gt;%
+      mutate(Genotype = &quot;Col-0&quot;) %&gt;%
+      mutate(Interface = &quot;PPP-EN&quot;) 
+  })    
+
+#we edit the text of the DatasetFilename column to clean it 
+Col_area$DatasetFilename &lt;- gsub(&quot;_ContactArea3D_wall.csv&quot;, &quot;&quot;, Col_area$DatasetFilename)</code></pre>
+<pre class="r"><code># IMPORTANT:
+# the working directory is assumed to be the downloaded folder &quot;Data_individual_cells&quot; so paths are given relative to that. Make sure this is also the case in your R environment using the getwd and setwd
+
+#first we read the files 
+Col_area &lt;- list.files(path = &quot;.&quot;, pattern = &quot;ContactArea3D_wall.csv&quot;) %&gt;%   
+  map_df(function(f){
+        #this will print the dataset 
+    print(f) 
+    x &lt;- read_csv(f) %&gt;% 
       as.data.frame %&gt;% 
       mutate(DatasetFilename = f) %&gt;%
       mutate(Genotype = &quot;Col-0&quot;) %&gt;%
@@ -695,26 +699,17 @@ Col_area$DatasetFilename &lt;- gsub(&quot;_ContactArea3D_wall.csv&quot;, &quot;&
 Col_area_corrected &lt;- Col_area %&gt;% group_by(Genotype, Interface, DatasetFilename) %&gt;% dplyr::summarise(total_surface = sum(SurfaceArea, na.rm = TRUE))
 
 # we plot it
-library(ggbeeswarm)
-
 Col_area_corrected %&gt;%
-  ggplot(aes(x= Genotype, y=total_surface, colour= Genotype, fill= Genotype)) + theme_bw() +
+  ggplot(aes(x= Genotype, y=total_surface, colour= Genotype, fill= Genotype)) +
   geom_violin(alpha=0.5) + 
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
-  geom_quasirandom(colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.5) +
+  ggbeeswarm::geom_quasirandom(colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.5) +
   labs(y = &quot;Surface area of the cell (um^2)&quot;) +
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15), 
-        legend.title = element_text(size = 15),
-        legend.text = element_text(size = 15)) +
   scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
   scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
   facet_grid(~Interface) </code></pre>
-<p><img src="surfaces_files/figure-html/unnamed-chunk-7-1.png" width="672" /></p>
+<p><img src="surfaces_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p><br></p>
 <p>Using the median value of the surface and the median values of the percentages that we obtained <a href="#surf1">above</a> we can manually get estimates in um^2 of the conductive surface in cells and of the surface of the single clusters.</p>
 <p><br></p>

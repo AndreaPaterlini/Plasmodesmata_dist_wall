@@ -1,5 +1,5 @@
 ---
-title: "Distributions"
+title: "Spatial Distributions"
 output:
   html_document:
     toc: true
@@ -9,9 +9,7 @@ output:
 
 <br>
 
-In this section we are now going to use the first plugin we developed for the Paterlini, Belevich et al. paper: the *SpatialControlPoints* plugin. The biological question we will try to address with this tool relates to the distribution of Plasmodesmata (or similar types of annotations along a given model). We start by asking: **Is there a bias in how plasmodesmata are distributed over a cellular interface?**
-
-If you downloaded a standalone version of MIB from the website then the plugins are already contained in the software. If you have dowloaded the Matlab version of the programme make sure you have download the plugins from [here](actual link) and unzipped them in the *Plugin* folder of MIB. They will automatically appear in the scroll down list under the *Plugin* tab in the MIB interface. To launch MIB from the Matlab environment enter "mib" as a command. We will apply these plugins in [the next section](#run). 
+In this section we are now going to use the first plugin we developed for the Paterlini, Belevich et al. paper: the *SpatialControlPoints* plugin. The biological question we will try to address with this tool relates to the distribution of Plasmodesmata (or similar types of annotations along a given model). We start by asking: **are plasmodesmata spread homogeneously across the cell wall?**
 
 <br>
 
@@ -65,8 +63,7 @@ If you want to analyse multiple datasets at the same, as we will do here, the pr
 
 <br>
 
-We have now generated the data necessary for our analyses so we will move away from the MIB environment and process the data in R. Please make sure you have downloaded the most recent version of R from [here](https://www.r-project.org/).
-We also reccommend you download the RStudio integrated development environment from [here](https://rstudio.com/products/rstudio/), which is a friendly interface to operate R.
+We have now generated the data necessary for our analyses so we will move away from the MIB environment and process the data in R. 
 
 <br>
 
@@ -74,14 +71,63 @@ We also reccommend you download the RStudio integrated development environment f
 
 <br>
 
-```{r, message = FALSE, warning= FALSE, results = 'hide'}
+```{r, include= FALSE}
+
+# THIS SECTION IS HIDDEN AND ONLY REQUIRED FOR KNITTING PURPOSES
+# BECAUSE WE DON'T WANT TO SHOW SETWD FUNCTION (as the path would likely be different on the computer of a user, we mirror the first part of the script and run it in a hidden chunk. The chunk diplayed will actally be idle, showing the code but not run
 
 library(tidyverse)
 
-#the working directory of your files will be different from this one so make sure you change it appropriately
 setwd('./Data_individual_cells')
 
-### READING THE FILES CONTAINING THE OUTPUT OF THE SPATIALCONTROLPOINTS PLUGIN
+Col_simul <- list.files(path = ".", pattern = "random_points.csv") %>% 
+  map_df(function(f){
+    print(f) 
+    x <- read_csv(f) %>% 
+      as.data.frame %>% 
+      mutate(Genotype = "Col-0") %>%
+      mutate(Interface = "PPP-EN") 
+  })    
+
+Col_real <- list.files(path = ".", pattern = "Ann.csv") %>% 
+  map_df(function(f){
+    print(f) 
+    x <- read_csv(f) %>% 
+      as.data.frame %>% 
+      select(c(LabelPositionXunits, LabelPositionYunits, LabelPositionZunits)) %>% 
+      rename("X_units"="LabelPositionXunits") %>%
+      rename("Y_units"="LabelPositionYunits") %>%
+      rename("Z_units"="LabelPositionZunits") %>%
+      mutate(Genotype = "Col-0") %>%
+      mutate(DatasetFilename = f) %>%
+      mutate(Interface = "PPP-EN") %>%
+      mutate(IterationNumber = "real")
+  })    
+
+# we also set the general plotting theme so that we don't need to make it explicit in the other chunks
+# where we need to deviate from this it is shown in the code
+
+theme_set(
+  theme_bw() + 
+      theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        legend.title = element_text(size = 15),
+        legend.text = element_text(size = 15))  
+)
+
+```
+
+```{r, eval = FALSE}
+
+library(tidyverse)
+
+# IMPORTANT:
+# the working directory is assumed to be the downloaded folder "Data_individual_cells" so paths are given relative to that. Make sure this is also the case in your R environment using the getwd and setwd
+
+### READING THE FILES CONTAINING THE OUTPUT OF THE SPATIALCONTROLPOINTS PLUGIN ###
 
 # the following function will read all the "random_points" files in the folder you assigned as your working directory
 # using the mutate function then we add extra informations such as genotype and the interface we are analysing
@@ -91,17 +137,15 @@ Col_simul <- list.files(path = ".", pattern = "random_points.csv") %>%
   map_df(function(f){
         #this will print the dataset 
     print(f) 
-    x <- read.csv(f) %>% 
+    x <- read_csv(f) %>% 
       as.data.frame %>% 
       mutate(Genotype = "Col-0") %>%
       mutate(Interface = "PPP-EN") 
   })    
 
-### READING THE FILES CONTAINING THE EXPORTED REAL ANNOTATIONS
+### READING THE FILES CONTAINING THE EXPORTED REAL ANNOTATIONS ###
 
 #the same code as above will also work to read the files containing the real PD positions do but we need to add a couple of extra lines due to the way the file was written by MIB programme
-
-library(data.table)
 
 Col_real <- list.files(path = ".", pattern = "Ann.csv") %>% 
   map_df(function(f){
@@ -109,17 +153,25 @@ Col_real <- list.files(path = ".", pattern = "Ann.csv") %>%
     x <- read_csv(f) %>% 
       as.data.frame %>% 
       # we need to select only the columns where the coordinates were recalculated relative to the bounding box
-      subset(select = c(LabelPositionXunits, LabelPositionYunits, LabelPositionZunits)) %>% 
+      select(c(LabelPositionXunits, LabelPositionYunits, LabelPositionZunits)) %>% 
       # for compatibility with the Col_simulated we need to have the same labels on the columns
-      setnames(old = c('LabelPositionXunits','LabelPositionYunits', 'LabelPositionZunits'), new = c('X_units','Y_units', 'Z_units')) %>%
+      rename("X_units"="LabelPositionXunits") %>%
+      rename("Y_units"="LabelPositionYunits") %>%
+      rename("Z_units"="LabelPositionZunits") %>%
       mutate(Genotype = "Col-0") %>%
+      #the following line attaches the file name as the DatasetFilename
       mutate(DatasetFilename = f) %>%
       mutate(Interface = "PPP-EN") %>%
       # we add a fake column for iteration - this is important to be able to merge this object with Col_simul
       mutate(IterationNumber = "real")
   })    
 
-### MERGING THE TWO OBJECTS
+```
+
+
+```{r, message = FALSE, warning= FALSE, results = 'hide'}
+
+### MERGING THE TWO OBJECTS ###
 
 # Before merging we need to clean the name of the files, removing the original file format and other endings added during the data generation by the plugins. 
 # It is important that the Datsetfilenames in the Col_simul and Col_real objects are the same before we merge them. Comparisons won't be otherwise possible
@@ -135,13 +187,11 @@ Col_0 <- rbind(Col_real, Col_simul)
 # we are going to duplicate the dataset column first
 Col_0$Cell = Col_0$DatasetFilename
 
-#we are splitting the column just before "PPP" therefore taking _ as well 
-# and retains first part of the split (it takes some time)
-library(stringr)
-Col_0$DatasetFilename <- sapply(str_split(Col_0$DatasetFilename, ".PPP"), head, 1)
-
 # in the column cell we remove anything before the name of the cell
 Col_0$Cell <- gsub(".*PPP", "PPP", Col_0$Cell)
+
+#in the dataset filename column we remove anything after _DNN
+Col_0$DatasetFilename <- gsub("_PPP.*","", Col_0$DatasetFilename)
 
 ```
 
@@ -154,7 +204,6 @@ Col_0$Cell <- gsub(".*PPP", "PPP", Col_0$Cell)
 ```{r, message = FALSE, warning= FALSE}
 
 #you will need this library for plotting
-# install.packages("scatterplot3d")
 library("scatterplot3d")  
 
 #we are going to look at one single cell so we will filter the Col_0 object
@@ -199,9 +248,6 @@ addgrids3d(simulation_example, grid = c("xy", "xz", "yz"))
 
 s3d$points3d(simulation_example, pch = 16, col="gold3")
 
-# please note that there might be differences compared to the figure in the paper since different simulated spatial controls were employed for the two.
-# However, there are no conceptual differences 
-
 ```
 
 
@@ -230,7 +276,7 @@ matrixdist <- function(my_df) {
 #There is a map function in other packages we are using so we make it explicit without loading library
 
 Col_0_nested <- Col_0_nested %>%
-  mutate(distances = purrr::map(coordinates, matrixdist)) %>% 
+  mutate(distances = map(coordinates, matrixdist)) %>% 
   # this is a handy trick for later colouring purposes, you generate a coloumn with a binary classification using ifelse. All those that are not real are simulated
   mutate(Type = ifelse(IterationNumber == "real", "Real points", "Simulated"))
 
@@ -261,25 +307,14 @@ Col_0_subset <- Col_0_nested %>%
 
 Col_0_subset %>% 
   # here we annotated out the filtering of iteration so it takes longer
-  # this is just to show that there is no difference in data interpretation by reducing the visualisation to 100
   #filter(IterationNumber %in% c(1:100, "real")) %>% 
   ggplot(aes(distances, group = IterationNumber, colour = Type)) +
   geom_density() + 
   # to make the line of the real points stand out we use a trick and make it wider
-  geom_density(data= filter(Col_0_subset, Type == "Real points"), aes(distances), size = 2) + theme_bw() + 
+  geom_density(data= filter(Col_0_subset, Type == "Real points"), aes(distances), size = 2) + 
   geom_hline(yintercept=0, colour="white", size=2) +
   labs(x = "Pairwise euclidean distances between PDs", y = "Frequency of occurrence") +
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15), 
-        legend.title = element_text(size = 15),
-        legend.text = element_text(size = 15)) +
   scale_color_manual(values=c("firebrick1", "gold2")) 
-
-# please note that there might be slight differences compared to the figure in the paper since different spatial controls were employed for the two.
-# There are no conceptual differences 
   
 ```
 
@@ -290,6 +325,8 @@ Col_0_subset %>%
 <br>
 
 ```{r, message = FALSE, warning= FALSE}
+
+#library(broom) called in the function so no need to load it
 
 # to perform the next section we actually need to structure the data in a slighly different manner. Rather than editing the Col_0 objects we generated we go back to the Col_real and Col_simul objects in the first section
 
@@ -330,8 +367,7 @@ non_signif <- filter(Col_0_dists, p.value > 0.05)
 # we can then look at variation between cells of the same genotype
 
 Col_0_dists %>% 
-  ggplot(aes(statistic, colour = DatasetFilename, fill= DatasetFilename)) + 
-  theme_bw() +
+  ggplot(aes(statistic, colour = DatasetFilename, fill= DatasetFilename)) +
   geom_density(size = 1, alpha = 0.5) +
   theme(legend.position = "bottom") +
   # we colour 0 as this is the value in the test results that would mean identity between the two distributions tested
@@ -340,19 +376,9 @@ Col_0_dists %>%
   # to split the legend over 2 columns we use the guides argument
   guides(colour = guide_legend(ncol = 2)) + 
   labs(x = "Ks statistic test value", y = "Density") +
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15), 
-        strip.text.y = element_text(size = 15),
-        legend.title = element_text(size = 10),
+  theme(legend.title = element_text(size = 10),
         legend.text = element_text(size = 10)) +
   facet_grid(Genotype~Interface) 
-
-# please note that there might be slight differences compared to the figure in the paper as different spatial controls were employed here.
-# There are no conceptual differences 
-
 
 ```
 <br>
@@ -362,6 +388,8 @@ Col_0_dists %>%
 <br>
 
 ```{r}
+
+#library(dplyr) called in the function so no need to load it
 
 # please note that here we have data for a single genotype (the sample data provided belong to WT roots) so the visualisation might appear less useful compared to what we had in the paper
 
@@ -379,10 +407,8 @@ non_signif <- filter(distances_cell, mean_p > 0.05)
 # we are going to duplicate the dataset column first
 distances_cell$Cell = distances_cell$DatasetFilename
 
-#we are splitting the column just before "PPP" therefore taking _ as well 
-# and retains first part of the split (it takes some time)
-library(stringr)
-distances_cell$DatasetFilename <- sapply(str_split(distances_cell$DatasetFilename, ".PPP"), head, 1)
+#in the dataset filename column we remove anything after _DNN
+distances_cell$DatasetFilename <- gsub("_PPP.*","", distances_cell$DatasetFilename)
 
 # in the column cell we remove anything before the name of the cell
 distances_cell$Cell <- gsub(".*PPP", "PPP", distances_cell$Cell)
@@ -390,7 +416,7 @@ distances_cell$Cell <- gsub(".*PPP", "PPP", distances_cell$Cell)
 # we are now going to plot the data for all the cells (violin plots) and for single cells (symbols) at the same time. Bars of corresponding colours will indicate medians
 
 Col_0_dists %>% 
-  ggplot(aes(x= Genotype, y=statistic, colour= Genotype, fill= Genotype)) +    theme_bw() +
+  ggplot(aes(x= Genotype, y=statistic, colour= Genotype, fill= Genotype)) + 
   # we plot the values for all cells
   geom_violin(alpha=0.5) + 
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
@@ -401,22 +427,12 @@ Col_0_dists %>%
                geom = "crossbar", size = 0.5, width = 0.3, alpha=1, colour="black") + 
   geom_hline(yintercept=0, colour="red", size=0.75) + 
   labs(y = "Ks statistic test value") +
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15), 
-        legend.title = element_text(size = 15),
-        legend.text = element_text(size = 15)) +
   # we have 2 different roots or datsets here so we provide two symbols to differenciate them
   scale_shape_manual(values=c(19, 17)) +
   # we have one single genotype here
   scale_color_manual(values=c("#8B8B83")) +
   scale_fill_manual(values=c("#8B8B83")) +
   facet_grid(~Interface)
-
-# please note that there might be slight differences compared to the figure in the paper as different spatial controls were employed here.
-# There are no conceptual differences 
 
 
 ```

@@ -417,7 +417,7 @@ div.tocify {
 <div id="download-the-data" class="section level1">
 <h1>Download the data</h1>
 <p><br></p>
-<p>We have uploaded <strong>Example datasets</strong> to the Apollo data repository. Please download the folder from <a href="actual%20link">here</a> and store it on your computer. Unzip the <em>Data_individual_cells</em> folder and don’t rename it as we will use it as the working directory. In the case of your own data you can have a name different from for your folder. However, bear in mind that you will need to change the scripts provided in this pipeline accordingly. We will now open the data in <a href="#open">the next section</a>.</p>
+<p>We have uploaded <strong>Example datasets</strong> to the Google drive (they will be moved to a proper data repository before final submission). Please download the folder from <a href="https://drive.google.com/file/d/1g-Wg7AuJTwVdNdB3ydkkET8hvQtFOPC0/view?usp=sharing">here</a> and store it on your computer. <a href="actual%20link">(/these will be moved to an official data repository before final publication)</a>. Unzip the <em>Data_individual_cells</em> folder and don’t rename it as we will use it as the working directory. In the case of your own data you can have a name different from for your folder. However, bear in mind that you might need to adjust the scripts provided in this pipeline accordingly.</p>
 <p><br></p>
 </div>
 <div id="open" class="section level1">
@@ -426,22 +426,52 @@ div.tocify {
 <p>In the unzipped folder you will find a series of files of different types. Here is a snapshot image showing them</p>
 <p><br> <img src="img/data.png" width="750" /></p>
 <p>In the folder there are datasets from 2 different Col-0 samples (WT <em>Arabidopsis thaliana</em> roots). The data associated with each sample are shown with the vertical brown and light blue bars in the image. For each of these two samples, multiple cells are provided. Each cell dataset has 3 files associated with it to start with (more will be generated as we go along the pipeline).</p>
-<p>You should see a <em>.am</em> file (blue box), which contains the image stack itself (and is indeed the heaviest file), a <em>.model</em> file (green box) which contains the cell wall model (this has already been generated, in the case of your own data you would have to carefully generate this model as described in the paper and using the tools of the MIB software) and a <em>.ann</em> file (yellow box) containing the annotated PD positions (again for your datasets you would have to generate this on your own). We will now load the data in <a href="#load">the next section</a>.</p>
+<p>You should see a <em>.am</em> file (blue box), which contains the image stack itself (and is indeed the heaviest file), a <em>.model</em> file (green box) which contains the cell wall model (this has already been generated, in the case of your own data you would have to carefully generate this model as described in the paper and using the tools of the MIB software) and a <em>.ann</em> file (yellow box) containing the annotated PD positions (again for your datasets you would have to generate this on your own).</p>
 <p><br></p>
 </div>
 <div id="load" class="section level1">
 <h1>Load the data</h1>
 <p><br></p>
 <p>To load and operate on the data you will need the MIB software<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, you can download it from <a href="http://mib.helsinki.fi/">this website</a>. Please see the <em>Downloads</em> tab for the version that might best suit your system requirements. The <em>Matlab version</em> requires you to have a version of the proprietary Matlab software. If you don’t there is no need for you to purchase such programme, just downlaod a <em>Standalone version</em> of MIB.</p>
-<p>To familiarise yourself with the sofware interface and learn about its function see the <em>Tutorials</em> tab on the MIB website. The tutorials will be particularly useful to generate the models of the cell wall (which is a step we already performed here).</p>
+<p>To familiarise yourself with the sofware interface and learn about its function see the <a href="http://mib.helsinki.fi/tutorials.html"><em>Tutorials</em></a> tab on the MIB website. The tutorials will be particularly useful to generate the models of the cell wall (which is a step we already performed here).</p>
 <p>Lauch the MIB software. Load the dataset by defining the folder path in the upper bar and double clicking on the dataset of interest among those appearing in the left panel. Models should be loaded from the segmentation panel in the lower left half of the workspace. Lastly PD annotations should be loaded via the annotation option in the bottom left side.</p>
-<p>Once you have completed these tasks you should see the following view. Please note that here we are using the first dataset contained in the <em>Data_individual_cells</em> folder (*_PPP1-EN.am). The cell wall model is shown in green, superimposed on the original image stack. Annotations are shows as crosses in yellow with text next to the. Black circles in the image point to the functions previously described to load the various components.</p>
+<p>Once you have completed these tasks you should see the following view. Please note that here we are using the first dataset contained in the <em>Data_individual_cells</em> folder (*_PPP1-EN.am). The cell wall model is shown in green, superimposed on the original image stack. Annotations are shows as crosses in yellow with text next to them. Black circles in the image point to the functions previously described to load the various components.</p>
 <p><br></p>
 <div class="figure">
 <img src="img/loaded_data.png" width="800" />
 
 </div>
 <p><br></p>
+</div>
+<div id="plugins-for-mib" class="section level1">
+<h1>Plugins for MIB</h1>
+<p><br></p>
+<p>If you downloaded a standalone version of MIB from the website then the plugins are already contained in the software. If you have dowloaded the Matlab version of the programme make sure you have download the plugins from <a href="actual%20link">here</a> and unzipped them in the <em>Plugin</em> folder of MIB. They will automatically appear in the scroll down list under the <em>Plugin</em> tab in the MIB interface. To launch MIB from the Matlab environment enter “mib” as a command.</p>
+<p><br></p>
+</div>
+<div id="load" class="section level1">
+<h1>R software and libraries</h1>
+<p><br></p>
+<p>Please make sure you have downloaded the most recent version of R from <a href="https://www.r-project.org/">here</a>. We also reccommend you download the RStudio integrated development environment from <a href="https://rstudio.com/products/rstudio/">here</a>, which is a friendly interface to operate R.</p>
+<p>We employed R version 3.4.0 and R studio version 1.1.383</p>
+<pre class="r"><code>#the following packages are also requried for the analysis
+#make sure you install them (you only need to run the following commands once)
+
+#for data manipulation
+install.packages(&quot;tidyverse&quot;) # we used version 1.2.1 (it includes ggplot2, dplyr packages also used here)
+install.packages(&quot;broom&quot;) # 0.5.1
+install.packages(&quot;splancs&quot;) # 2.01-40
+install.packages(&quot;factoextra&quot;) # 1.0.5
+install.packages(&quot;mclust&quot;) # 5.4.2
+
+# for writing large files
+install.packages(&quot;data.table&quot;) # 1.12.0
+
+#for data visualisation
+install.packages(&quot;ggbeeswarm&quot;) # 0.6.0
+install.packages(&quot;scatterplot3d&quot;) #0.3-41
+
+#you can check versions using the commands version and sessionInfo()</code></pre>
 <p>You are now ready to proceed to the actual analysis pipeline <a href="distributions.html">in the Distributions section</a>.</p>
 <p><br></p>
 </div>

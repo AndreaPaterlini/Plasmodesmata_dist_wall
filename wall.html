@@ -11,7 +11,7 @@
 
 
 
-<title>Cell Wall</title>
+<title>Wall Thickness</title>
 
 <script src="site_libs/jquery-1.11.3/jquery.min.js"></script>
 <meta name="viewport" content="width=device-width, initial-scale=1" />
@@ -406,14 +406,13 @@ div.tocify {
 
 
 
-<h1 class="title toc-ignore">Cell Wall</h1>
+<h1 class="title toc-ignore">Wall Thickness</h1>
 
 </div>
 
 
 <p><br></p>
 <p>In this section we shift to a different biological question and we employ the last plugin developed for the Paterlini, Belevich et al. paper. Using the <em>CellWallThickness</em> plugin we will try to address the biological question of cell wall thickness around Plasmodesmata (or similar types of annotations along a given model). We ask: <strong>Is the cell wall in proximity of plasmodesmata different (in terms of thickness) compared to the wall average?</strong></p>
-<p>If you downloaded a standalone version of MIB from the website then the plugins are already contained in the software. If you have dowloaded the Matlab version of the programme make sure you have download the plugins from <a href="actual%20link">here</a> and unzipped them in the <em>Plugin</em> folder of MIB. They will automatically appear in the scroll down list under the <em>Plugin</em> tab in the MIB interface. To launch MIB from the Matlab environment enter “mib” as a command. We will apply the <em>CellWallthickness</em> plugins in <a href="#run3">the next section</a>.</p>
 <p><br></p>
 <div id="run3" class="section level1">
 <h1>Run the <em>CellWallThickness</em> plugin</h1>
@@ -445,7 +444,10 @@ div.tocify {
 <h1>Processing the thicknesses in R</h1>
 <p><br></p>
 <pre class="r"><code>library(tidyverse)
-setwd(&#39;./Data_individual_cells&#39;)
+#library(ggbeeswarm) called in the function so no need to load it
+
+# IMPORTANT:
+# the working directory is assumed to be the downloaded folder &quot;Data_individual_cells&quot; so paths are given relative to that. Make sure this is also the case in your R environment using the getwd and setwd
 
 #first we can read the files containing all the points (or all other points depending on which options were selected)
 Col_allwall &lt;- list.files(path = &quot;.&quot;, pattern = &quot;CellWallThickness_allPoints.csv&quot;) %&gt;%   map_df(function(f){
@@ -461,14 +463,11 @@ Col_allwall &lt;- list.files(path = &quot;.&quot;, pattern = &quot;CellWallThick
 Col_allwall$DatasetFilename &lt;- gsub(&quot;_CellWallThickness_allPoints.csv&quot;, &quot;&quot;, Col_allwall$DatasetFilename)
 
 # we rename the thickness column 
-
-library(data.table)
-
-Col_allwall &lt;- Col_allwall %&gt;% setnames(old = c(&#39;Matrix.of.cell.wall.thickness.values.in.micrometers.for.each.point.of.the.masked.centreline&#39;), new = c(&#39;Thickness_um&#39;))
+Col_allwall &lt;- Col_allwall %&gt;% rename(&#39;Thickness_um&#39;=&#39;Matrix.of.cell.wall.thickness.values.in.micrometers.for.each.point.of.the.masked.centreline&#39;)
 
 # now we read the files containing thicknesses at real and control points
-
-Col_wall &lt;- list.files(path = &quot;.&quot;, pattern = &quot;CellWallThickness.csv&quot;) %&gt;%   map_df(function(f){
+Col_wall &lt;- list.files(path = &quot;.&quot;, pattern = &quot;CellWallThickness.csv&quot;) %&gt;%   
+  map_df(function(f){
     x &lt;- read.csv(f) %&gt;% 
       as.data.frame %&gt;% 
       mutate(DatasetFilename = f) %&gt;%
@@ -481,19 +480,18 @@ Col_wall$DatasetFilename &lt;- gsub(&quot;_CellWallThickness.csv&quot;, &quot;&q
 
 # we select the data relating to Pd positions (real) 
 
-Col_wall_pd &lt;- select(Col_wall, &quot;Genotype&quot;, &quot;Interface&quot;, &quot;DatasetFilename&quot;, &quot;WallThicknessRealPores_um&quot;) %&gt;% 
+Col_wall_pd &lt;- select(Col_wall, &quot;Genotype&quot;, &quot;Interface&quot;, &quot;DatasetFilename&quot;, &quot;WallThicknessRealPores_um&quot;) %&gt;%
   # we rename the thickness column so that it will match with the one from all points
-  setnames(old = c(&#39;WallThicknessRealPores_um&#39;), new = c(&#39;Thickness_um&#39;)) %&gt;%
+  rename(&#39;Thickness_um&#39;=&#39;WallThicknessRealPores_um&#39;) %&gt;%
   # we create a column describing the type of data
   mutate(Positions = &quot;PDs&quot;)
 
 # we do the same for simulated points
 
 Col_wall_sim &lt;- select(Col_wall, &quot;Genotype&quot;, &quot;Interface&quot;, &quot;DatasetFilename&quot;, &quot;WallThicknessRandomPores_um&quot;) %&gt;% 
-  setnames(old = c(&#39;WallThicknessRandomPores_um&#39;), new = c(&#39;Thickness_um&#39;)) %&gt;%
-  mutate(Positions = &quot;Rand. Unif. distributed&quot;) 
-
-# we merge the two 
+  rename(&#39;Thickness_um&#39;=&#39;WallThicknessRandomPores_um&#39;) %&gt;%
+  mutate(Positions = &quot;Rand. Unif. distributed&quot;)</code></pre>
+<pre class="r"><code># we merge the two objects
 
 Col_0 &lt;- rbind(Col_wall_pd, Col_wall_sim, Col_allwall)
 
@@ -507,16 +505,13 @@ Col_0 &lt;- Col_0 %&gt;%
 # we are going to duplicate the dataset column first
 Col_0$Cell = Col_0$DatasetFilename
 
-#we are splitting the column just before &quot;PPP&quot; therefore taking _ as well 
-# and retains first part of the split (it takes some time)
-library(stringr)
-Col_0$DatasetFilename &lt;- sapply(str_split(Col_0$DatasetFilename, &quot;.PPP&quot;), head, 1)
+#in the dataset filename column we remove anything after _DNN
+Col_0$DatasetFilename &lt;- gsub(&quot;_PPP.*&quot;,&quot;&quot;, Col_0$DatasetFilename)
 
 # in the column cell we remove anything before the name of the cell
 Col_0$Cell &lt;- gsub(&quot;.*PPP&quot;, &quot;PPP&quot;, Col_0$Cell)
 
 # we summarise the values of thickness for each cell
-
 stats &lt;- Col_0 %&gt;% 
   group_by(Genotype, Interface, DatasetFilename, Cell, Positions) %&gt;% 
   dplyr::summarise(mean_thickness = mean(Thickness_nm))
@@ -526,25 +521,18 @@ stats &lt;- Col_0 %&gt;%
 # we introduce a dodge graphical parameter to better space the groups
 dodge &lt;- position_dodge(width = 0.4)
 
-library(&quot;ggbeeswarm&quot;)
-
-ggplot(Col_0, aes(x = Positions, y = Thickness_nm, fill=Positions, colour=Positions)) + theme_bw() +
+ggplot(Col_0, aes(x = Positions, y = Thickness_nm, fill=Positions, colour=Positions)) +
   geom_violin(alpha=0.25) +
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
               geom = &quot;crossbar&quot;, size = 0.3, width = 0.4, alpha=1) +
   stat_summary(data=stats, aes(x = Positions, y = mean_thickness), fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = &quot;crossbar&quot;, size = 0.3, width = 0.4, colour=&quot;black&quot;, alpha=1) +
-  geom_quasirandom(data=stats, aes(x = Positions, y = mean_thickness, shape=DatasetFilename), width = 0.2, size= 2, colour=&quot;black&quot;, alpha=0.5) +
+  ggbeeswarm::geom_quasirandom(data=stats, aes(x = Positions, y = mean_thickness, shape=DatasetFilename), width = 0.2, size= 2, colour=&quot;black&quot;, alpha=0.5) +
   labs(x = &quot;Positions&quot;, y = &quot;Wall thickness (nm)&quot;) + 
-  theme(axis.title.x = element_text(size = 15), 
-        axis.title.y = element_text(size = 15), 
-        axis.text.x = element_text(size = 15), 
-        axis.text.y = element_text(size = 15),
-        strip.text.x = element_text(size = 15), 
-        legend.position = &quot;none&quot;)  + 
+  theme(legend.position = &quot;none&quot;)  + 
   scale_y_log10() + 
   facet_grid(~Interface)</code></pre>
-<p><img src="wall_files/figure-html/unnamed-chunk-1-1.png" width="672" /></p>
+<p><img src="wall_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
 <p>We have reached the end of this guided pipeline. We hope you will employ the tools we developed for the Plasmodesmata community. Please feel free to share feedback!</p>
 <p>Good luck with your research!</p>
 </div>
