@@ -320,7 +320,7 @@ Col_0_subset %>%
 
 <br>
 
-# ks tests and plotting of cell values
+# KS tests and plotting of cell values
 
 <br>
 
@@ -358,11 +358,28 @@ Col_0_dists <- Col_0_dists %>%
   mutate(ks = map2(dist_real, dist_sim, tidy_ks)) %>% 
   unnest(ks)
 
-# we can already assess the significance of the results based on number of cases with a non significant test result 
-# histograms can then we generated based on these results
+# we can already assess the significance of the results based on the p values 
 
-non_signif <- filter(Col_0_dists, p.value > 0.05)
-# 0 so all the tests suggest a difference between each of the 1000 simulated distributions and the real one (in terms of distances)
+# now we look at the distribution of p values
+
+Col_0_dists %>%
+  ggplot(aes(p.value, group=DatasetFilename, fill=Interface, colour=Interface)) + 
+  theme_bw() +
+  geom_density(size = 1, alpha = 0.3) +
+  theme(legend.position = "bottom") +
+  geom_vline(xintercept=0.05, colour="red", size=0.80) + 
+  labs(x = "p.value", y = "Density") +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        strip.text.y = element_text(size = 15),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 10)) +
+  # we use a log scale to better visualise the values 
+  scale_x_log10() +
+  facet_grid(Genotype~.)
 
 # we can then look at variation between cells of the same genotype
 
@@ -383,11 +400,11 @@ Col_0_dists %>%
 ```
 <br>
 
-# ks values for genotype
+# KS values for genotype(s)
 
 <br>
 
-```{r}
+```{r, message = FALSE, warning= FALSE}
 
 #library(dplyr) called in the function so no need to load it
 
@@ -415,20 +432,18 @@ distances_cell$Cell <- gsub(".*PPP", "PPP", distances_cell$Cell)
 
 # we are now going to plot the data for all the cells (violin plots) and for single cells (symbols) at the same time. Bars of corresponding colours will indicate medians
 
-Col_0_dists %>% 
-  ggplot(aes(x= Genotype, y=statistic, colour= Genotype, fill= Genotype)) + 
-  # we plot the values for all cells
-  geom_violin(alpha=0.5) + 
+distances_cell %>% 
+  ggplot(aes(x= Genotype, y=mean_ks, colour= Genotype, fill= Genotype)) + 
+  # we plot the values for the single cells
+  ggbeeswarm::geom_quasirandom(aes(shape=DatasetFilename), width = 0.2, size= 4, alpha=0.5, dodge.width = 0.2, show.legend = FALSE) +
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
-               geom = "crossbar", size = 0.5, width = 0.3, alpha=1) +
-  # now we plot those for the single cells
-  geom_point(data = distances_cell, aes(x= Genotype, y= mean_ks, shape=DatasetFilename), colour="black", fill="black", size= 2, alpha=0.5, show.legend = FALSE ) +
-  stat_summary(data = distances_cell, aes(x= Genotype, y= mean_ks), fun.y = median, fun.ymin = median, fun.ymax = median,
-               geom = "crossbar", size = 0.5, width = 0.3, alpha=1, colour="black") + 
+               geom = "crossbar", size = 0.5, width = 0.3, alpha=1) + 
   geom_hline(yintercept=0, colour="red", size=0.75) + 
   labs(y = "Ks statistic test value") +
+  theme(legend.position = "none") +
   # we have 2 different roots or datsets here so we provide two symbols to differenciate them
   scale_shape_manual(values=c(19, 17)) +
+  scale_y_continuous(limits = c(0, 0.3)) +
   # we have one single genotype here
   scale_color_manual(values=c("#8B8B83")) +
   scale_fill_manual(values=c("#8B8B83")) +
@@ -436,6 +451,29 @@ Col_0_dists %>%
 
 
 ```
+<br>
+
+# Sampling of the datasets
+
+<br>
+
+
+```{r, message = FALSE, warning= FALSE}
+
+# to replicare what we did in the paper (manipulatig the nuber of points to test the robustness of the outcome) there is a convenient function in R 
+# take the Col objects 
+# use the sample_n to randomly take a subset of the given ones. Size corresponds to the number of points we sample.Here are 37 
+
+real_subset <- Col_real %>% group_by(Genotype, Interface, DatasetFilename, IterationNumber) %>%
+  sample_n(size=37)
+
+simulated_subset <- Col_simul %>% group_by(Genotype, Interface, DatasetFilename, IterationNumber) %>%
+  sample_n(size=37)
+
+
+```
+
+
 <br>
 
 You have now completed this section: in the case of the data we provided we have shown that plasmodesmata display a bias in their distribution (when compared to uniform distributions). In the [next section](clusters.html) we will ask further questions about the this spatial bias we detected.

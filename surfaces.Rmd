@@ -162,7 +162,6 @@ calculate_areas_sil <- function(x){
   return(area_of_clusters)
 }
 
-
 # a nearly identical second function is created for the Mclust method
 
 calculate_areas_class <- function(x){
@@ -213,7 +212,7 @@ clusters_unnested <- bind_rows(area_for_method_class, area_for_method_sil)
 ```
 <br>
 
-# Calculating the median total conductive surface of an interface (as %) {#surf1}
+# Calculating the median total conductive surface of an interface (as %)
 
 <br>
 
@@ -225,20 +224,22 @@ clusters_unnested <- bind_rows(area_for_method_class, area_for_method_sil)
 #the easiest way is to subset the dataset only for relevant columns and then use unique
 
 ggplot(data=unique(clusters_unnested[, c("Genotype", "Interface", "DatasetFilename", "Cell", "perc_tot", "Method")]), aes(x= Method, y=perc_tot, colour= Genotype, fill= Genotype)) +
-  geom_violin(alpha=0.5)+ 
-  ggbeeswarm::geom_quasirandom(aes(group=Genotype), colour="black", fill="black", size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
+    # we use shape = to characterise the points according to which root (datset they belong to)
+  ggbeeswarm::geom_quasirandom(aes(shape=DatasetFilename,group=Genotype), size= 4, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = "crossbar", size = 0.5, width = 0.3, alpha=1)  + 
   labs(y = "% of interface surface overall occupied by PD clusters") +
   scale_color_manual(values=c("#8B8B83")) +
   scale_fill_manual(values=c("#8B8B83")) +
-  facet_grid(~Interface) 
+  facet_grid(~Interface) +
+  scale_y_continuous(limits= c(5,40), breaks = c(5,10,15,20,25,30,35,40)) +
+  scale_shape_manual(values=c(19,17))
 
 ```
 
 <br>
 
-# Calculating the median surface of individual clusters (as %) {#surf2}
+# Calculating the median surface of individual clusters (as %) 
 
 <br>
 
@@ -358,17 +359,29 @@ Col_area$DatasetFilename <- gsub("_ContactArea3D_wall.csv", "", Col_area$Dataset
 # because in some cases multiple objects were generated (despite having a single cellular interface) we merge those multiple objects into a single one
 Col_area_corrected <- Col_area %>% group_by(Genotype, Interface, DatasetFilename) %>% dplyr::summarise(total_surface = sum(SurfaceArea, na.rm = TRUE))
 
+# we are going to clean the DatasetFilename column as we did elsewhere in this pipeline
+# we are going to duplicate the dataset column first 
+Col_area_corrected$Cell = Col_area_corrected$DatasetFilename
+
+#in the dataset filename column we remove anything after _DNN
+Col_area_corrected$DatasetFilename <- gsub("_PPP.*","", Col_area_corrected$DatasetFilename)
+
+# in the column cell we remove anything before the name of the cell
+Col_area_corrected$Cell <- gsub(".*PPP", "PPP", Col_area_corrected$Cell)
+
 # we plot it
 Col_area_corrected %>%
   ggplot(aes(x= Genotype, y=total_surface, colour= Genotype, fill= Genotype)) +
-  geom_violin(alpha=0.5) + 
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = "crossbar", size = 0.5, width = 0.3, alpha=1)  + 
-  ggbeeswarm::geom_quasirandom(colour="black", fill="black", size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.5) +
+  ggbeeswarm::geom_quasirandom(aes(shape=DatasetFilename), size= 4, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.3) +
   labs(y = "Surface area of the cell (um^2)") +
+  theme(legend.position = "none") +
   scale_color_manual(values=c("#8B8B83")) +
   scale_fill_manual(values=c("#8B8B83")) +
-  facet_grid(~Interface) 
+  facet_grid(~Interface) +
+  scale_y_continuous(limits= c(60,130), breaks = c(60,70,80,90,100,110,120,130,140)) +
+  scale_shape_manual(values=c(19,17))
 
 ```
 

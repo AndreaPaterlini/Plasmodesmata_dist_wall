@@ -227,14 +227,16 @@ clusters_count <- rbind(clusters_sil, clusters_mc)
 
 clusters_count %>%
   ggplot(aes(x= Method, y=n, colour= Genotype, fill= Genotype)) +
-  geom_violin(alpha=0.5) + 
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = "crossbar", size = 0.5, width = 0.3, alpha=1)  + 
-  ggbeeswarm::geom_quasirandom(data= clusters_count, aes(group=Genotype), colour="black", fill="black", size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
+  # we use shape = to characterise the points according to which root (datset they belong to)
+  ggbeeswarm::geom_quasirandom(data= clusters_count, aes(shape=DatasetFilename, group=Genotype), size= 4, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
   labs(y = "n of clusters per cell") +
-  scale_color_manual(values=c("#8B8B83", "#008080")) +
-  scale_fill_manual(values=c("#8B8B83", "#008080")) +
-  facet_grid(~Interface) 
+  scale_color_manual(values=c("#8B8B83")) +
+  scale_fill_manual(values=c("#8B8B83")) +
+  facet_grid(~Interface) +
+  scale_y_continuous(limits= c(2,22), breaks = c(2,4,6,8,10,12,14,16, 18, 20, 22)) +
+  scale_shape_manual(values=c(19,17))
 
 ```
 
@@ -267,8 +269,8 @@ combined_count %>%
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = "crossbar", size = 0.5, width = 0.3, alpha=1)  + 
   labs(y = "n of PDs per cluster") +
-  scale_color_manual(values=c("#8B8B83", "#008080")) +
-  scale_fill_manual(values=c("#8B8B83", "#008080")) +
+  scale_color_manual(values=c("#8B8B83")) +
+  scale_fill_manual(values=c("#8B8B83")) +
   facet_grid(~Interface) +
   # we use a log scale to better visualise the range of data
   scale_y_log10()

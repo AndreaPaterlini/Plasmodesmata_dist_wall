@@ -541,7 +541,6 @@ calculate_areas_sil &lt;- function(x){
   return(area_of_clusters)
 }
 
-
 # a nearly identical second function is created for the Mclust method
 
 calculate_areas_class &lt;- function(x){
@@ -590,7 +589,7 @@ area_for_method_class &lt;- clusters_processed %&gt;%
 clusters_unnested &lt;- bind_rows(area_for_method_class, area_for_method_sil)</code></pre>
 <p><br></p>
 </div>
-<div id="surf1" class="section level1">
+<div id="calculating-the-median-total-conductive-surface-of-an-interface-as" class="section level1">
 <h1>Calculating the median total conductive surface of an interface (as %)</h1>
 <p><br></p>
 <pre class="r"><code># we now ask how much of the total surface (the gray shaded area we calculated in previous steps) is occupied by PD clusters
@@ -599,18 +598,20 @@ clusters_unnested &lt;- bind_rows(area_for_method_class, area_for_method_sil)</c
 #the easiest way is to subset the dataset only for relevant columns and then use unique
 
 ggplot(data=unique(clusters_unnested[, c(&quot;Genotype&quot;, &quot;Interface&quot;, &quot;DatasetFilename&quot;, &quot;Cell&quot;, &quot;perc_tot&quot;, &quot;Method&quot;)]), aes(x= Method, y=perc_tot, colour= Genotype, fill= Genotype)) +
-  geom_violin(alpha=0.5)+ 
-  ggbeeswarm::geom_quasirandom(aes(group=Genotype), colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
+    # we use shape = to characterise the points according to which root (datset they belong to)
+  ggbeeswarm::geom_quasirandom(aes(shape=DatasetFilename,group=Genotype), size= 4, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.9) +
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
   labs(y = &quot;% of interface surface overall occupied by PD clusters&quot;) +
   scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
   scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
-  facet_grid(~Interface) </code></pre>
+  facet_grid(~Interface) +
+  scale_y_continuous(limits= c(5,40), breaks = c(5,10,15,20,25,30,35,40)) +
+  scale_shape_manual(values=c(19,17))</code></pre>
 <p><img src="surfaces_files/figure-html/unnamed-chunk-4-1.png" width="672" /></p>
 <p><br></p>
 </div>
-<div id="surf2" class="section level1">
+<div id="calculating-the-median-surface-of-individual-clusters-as" class="section level1">
 <h1>Calculating the median surface of individual clusters (as %)</h1>
 <p><br></p>
 <pre class="r"><code># to calculate the surface of individual clusters independently we don&#39;t need to subset the data
@@ -698,17 +699,29 @@ Col_area$DatasetFilename &lt;- gsub(&quot;_ContactArea3D_wall.csv&quot;, &quot;&
 <pre class="r"><code># because in some cases multiple objects were generated (despite having a single cellular interface) we merge those multiple objects into a single one
 Col_area_corrected &lt;- Col_area %&gt;% group_by(Genotype, Interface, DatasetFilename) %&gt;% dplyr::summarise(total_surface = sum(SurfaceArea, na.rm = TRUE))
 
+# we are going to clean the DatasetFilename column as we did elsewhere in this pipeline
+# we are going to duplicate the dataset column first 
+Col_area_corrected$Cell = Col_area_corrected$DatasetFilename
+
+#in the dataset filename column we remove anything after _DNN
+Col_area_corrected$DatasetFilename &lt;- gsub(&quot;_PPP.*&quot;,&quot;&quot;, Col_area_corrected$DatasetFilename)
+
+# in the column cell we remove anything before the name of the cell
+Col_area_corrected$Cell &lt;- gsub(&quot;.*PPP&quot;, &quot;PPP&quot;, Col_area_corrected$Cell)
+
 # we plot it
 Col_area_corrected %&gt;%
   ggplot(aes(x= Genotype, y=total_surface, colour= Genotype, fill= Genotype)) +
-  geom_violin(alpha=0.5) + 
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
                geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1)  + 
-  ggbeeswarm::geom_quasirandom(colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.5) +
+  ggbeeswarm::geom_quasirandom(aes(shape=DatasetFilename), size= 4, alpha=0.5, width=0.1, show.legend = FALSE, dodge.width = 0.3) +
   labs(y = &quot;Surface area of the cell (um^2)&quot;) +
+  theme(legend.position = &quot;none&quot;) +
   scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
   scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
-  facet_grid(~Interface) </code></pre>
+  facet_grid(~Interface) +
+  scale_y_continuous(limits= c(60,130), breaks = c(60,70,80,90,100,110,120,130,140)) +
+  scale_shape_manual(values=c(19,17))</code></pre>
 <p><img src="surfaces_files/figure-html/unnamed-chunk-8-1.png" width="672" /></p>
 <p><br></p>
 <p>Using the median value of the surface and the median values of the percentages that we obtained <a href="#surf1">above</a> we can manually get estimates in um^2 of the conductive surface in cells and of the surface of the single clusters.</p>

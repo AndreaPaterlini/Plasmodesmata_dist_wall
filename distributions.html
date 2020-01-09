@@ -632,7 +632,7 @@ Col_0_subset %&gt;%
 <p><br></p>
 </div>
 <div id="ks-tests-and-plotting-of-cell-values" class="section level1">
-<h1>ks tests and plotting of cell values</h1>
+<h1>KS tests and plotting of cell values</h1>
 <p><br></p>
 <pre class="r"><code>#library(broom) called in the function so no need to load it
 
@@ -666,13 +666,30 @@ Col_0_dists &lt;- Col_0_dists %&gt;%
   mutate(ks = map2(dist_real, dist_sim, tidy_ks)) %&gt;% 
   unnest(ks)
 
-# we can already assess the significance of the results based on number of cases with a non significant test result 
-# histograms can then we generated based on these results
+# we can already assess the significance of the results based on the p values 
 
-non_signif &lt;- filter(Col_0_dists, p.value &gt; 0.05)
-# 0 so all the tests suggest a difference between each of the 1000 simulated distributions and the real one (in terms of distances)
+# now we look at the distribution of p values
 
-# we can then look at variation between cells of the same genotype
+Col_0_dists %&gt;%
+  ggplot(aes(p.value, group=DatasetFilename, fill=Interface, colour=Interface)) + 
+  theme_bw() +
+  geom_density(size = 1, alpha = 0.3) +
+  theme(legend.position = &quot;bottom&quot;) +
+  geom_vline(xintercept=0.05, colour=&quot;red&quot;, size=0.80) + 
+  labs(x = &quot;p.value&quot;, y = &quot;Density&quot;) +
+  theme(axis.title.x = element_text(size = 15), 
+        axis.title.y = element_text(size = 15), 
+        axis.text.x = element_text(size = 15), 
+        axis.text.y = element_text(size = 15),
+        strip.text.x = element_text(size = 15), 
+        strip.text.y = element_text(size = 15),
+        legend.title = element_text(size = 10),
+        legend.text = element_text(size = 10)) +
+  # we use a log scale to better visualise the values 
+  scale_x_log10() +
+  facet_grid(Genotype~.)</code></pre>
+<p><img src="distributions_files/figure-html/unnamed-chunk-6-1.png" width="672" /></p>
+<pre class="r"><code># we can then look at variation between cells of the same genotype
 
 Col_0_dists %&gt;% 
   ggplot(aes(statistic, colour = DatasetFilename, fill= DatasetFilename)) +
@@ -687,10 +704,10 @@ Col_0_dists %&gt;%
   theme(legend.title = element_text(size = 10),
         legend.text = element_text(size = 10)) +
   facet_grid(Genotype~Interface) </code></pre>
-<p><img src="distributions_files/figure-html/unnamed-chunk-6-1.png" width="672" /> <br></p>
+<p><img src="distributions_files/figure-html/unnamed-chunk-6-2.png" width="672" /> <br></p>
 </div>
-<div id="ks-values-for-genotype" class="section level1">
-<h1>ks values for genotype</h1>
+<div id="ks-values-for-genotypes" class="section level1">
+<h1>KS values for genotype(s)</h1>
 <p><br></p>
 <pre class="r"><code>#library(dplyr) called in the function so no need to load it
 
@@ -718,25 +735,37 @@ distances_cell$Cell &lt;- gsub(&quot;.*PPP&quot;, &quot;PPP&quot;, distances_cel
 
 # we are now going to plot the data for all the cells (violin plots) and for single cells (symbols) at the same time. Bars of corresponding colours will indicate medians
 
-Col_0_dists %&gt;% 
-  ggplot(aes(x= Genotype, y=statistic, colour= Genotype, fill= Genotype)) + 
-  # we plot the values for all cells
-  geom_violin(alpha=0.5) + 
+distances_cell %&gt;% 
+  ggplot(aes(x= Genotype, y=mean_ks, colour= Genotype, fill= Genotype)) + 
+  # we plot the values for the single cells
+  ggbeeswarm::geom_quasirandom(aes(shape=DatasetFilename), width = 0.2, size= 4, alpha=0.5, dodge.width = 0.2, show.legend = FALSE) +
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
-               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1) +
-  # now we plot those for the single cells
-  geom_point(data = distances_cell, aes(x= Genotype, y= mean_ks, shape=DatasetFilename), colour=&quot;black&quot;, fill=&quot;black&quot;, size= 2, alpha=0.5, show.legend = FALSE ) +
-  stat_summary(data = distances_cell, aes(x= Genotype, y= mean_ks), fun.y = median, fun.ymin = median, fun.ymax = median,
-               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1, colour=&quot;black&quot;) + 
+               geom = &quot;crossbar&quot;, size = 0.5, width = 0.3, alpha=1) + 
   geom_hline(yintercept=0, colour=&quot;red&quot;, size=0.75) + 
   labs(y = &quot;Ks statistic test value&quot;) +
+  theme(legend.position = &quot;none&quot;) +
   # we have 2 different roots or datsets here so we provide two symbols to differenciate them
   scale_shape_manual(values=c(19, 17)) +
+  scale_y_continuous(limits = c(0, 0.3)) +
   # we have one single genotype here
   scale_color_manual(values=c(&quot;#8B8B83&quot;)) +
   scale_fill_manual(values=c(&quot;#8B8B83&quot;)) +
   facet_grid(~Interface)</code></pre>
 <p><img src="distributions_files/figure-html/unnamed-chunk-7-1.png" width="672" /> <br></p>
+</div>
+<div id="sampling-of-the-datasets" class="section level1">
+<h1>Sampling of the datasets</h1>
+<p><br></p>
+<pre class="r"><code># to replicare what we did in the paper (manipulatig the nuber of points to test the robustness of the outcome) there is a convenient function in R 
+# take the Col objects 
+# use the sample_n to randomly take a subset of the given ones. Size corresponds to the number of points we sample.Here are 37 
+
+real_subset &lt;- Col_real %&gt;% group_by(Genotype, Interface, DatasetFilename, IterationNumber) %&gt;%
+  sample_n(size=37)
+
+simulated_subset &lt;- Col_simul %&gt;% group_by(Genotype, Interface, DatasetFilename, IterationNumber) %&gt;%
+  sample_n(size=37)</code></pre>
+<p><br></p>
 <p>You have now completed this section: in the case of the data we provided we have shown that plasmodesmata display a bias in their distribution (when compared to uniform distributions). In the <a href="clusters.html">next section</a> we will ask further questions about the this spatial bias we detected.</p>
 <p><br></p>
 </div>

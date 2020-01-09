@@ -511,28 +511,41 @@ Col_0$DatasetFilename &lt;- gsub(&quot;_PPP.*&quot;,&quot;&quot;, Col_0$DatasetF
 # in the column cell we remove anything before the name of the cell
 Col_0$Cell &lt;- gsub(&quot;.*PPP&quot;, &quot;PPP&quot;, Col_0$Cell)
 
+# PLOT VALUES FOR ONE CELL
+
+ggplot(data=filter(Col_0, DatasetFilename==&quot;170314_Col_HD_R20_339-381um_DNN&quot; &amp; Cell==&quot;PPP1-EN&quot;), aes(x = Positions, y = Thickness_nm, fill=Positions, colour=Positions)) +  geom_violin(alpha=0.25) + theme_bw() +
+  stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median, geom = &quot;crossbar&quot;, size = 0.3, width = 0.4, alpha=1) +
+  labs(x = &quot;Positions&quot;, y = &quot;Wall thickness (nm)&quot;) + 
+  theme(legend.position = &quot;none&quot;)  +
+  # the log scale is useful here because of the range of values
+  scale_y_log10() + 
+  facet_wrap(DatasetFilename~Cell)</code></pre>
+<p><img src="wall_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+<pre class="r"><code># PLOT VALUES FOR MULTIPLE CELLS (and multiple genotypes)
+
 # we summarise the values of thickness for each cell
 stats &lt;- Col_0 %&gt;% 
   group_by(Genotype, Interface, DatasetFilename, Cell, Positions) %&gt;% 
   dplyr::summarise(mean_thickness = mean(Thickness_nm))
 
-# plot 
+# we drop the violins from the plot
 
 # we introduce a dodge graphical parameter to better space the groups
 dodge &lt;- position_dodge(width = 0.4)
 
-ggplot(Col_0, aes(x = Positions, y = Thickness_nm, fill=Positions, colour=Positions)) +
-  geom_violin(alpha=0.25) +
+ggplot(data=stats, aes(x = Positions, y = mean_thickness, fill=Genotype, colour=Genotype, group = factor(Genotype))) + theme_bw() +
   stat_summary(fun.y = median, fun.ymin = median, fun.ymax = median,
-              geom = &quot;crossbar&quot;, size = 0.3, width = 0.4, alpha=1) +
-  stat_summary(data=stats, aes(x = Positions, y = mean_thickness), fun.y = median, fun.ymin = median, fun.ymax = median,
-               geom = &quot;crossbar&quot;, size = 0.3, width = 0.4, colour=&quot;black&quot;, alpha=1) +
-  ggbeeswarm::geom_quasirandom(data=stats, aes(x = Positions, y = mean_thickness, shape=DatasetFilename), width = 0.2, size= 2, colour=&quot;black&quot;, alpha=0.5) +
-  labs(x = &quot;Positions&quot;, y = &quot;Wall thickness (nm)&quot;) + 
-  theme(legend.position = &quot;none&quot;)  + 
-  scale_y_log10() + 
-  facet_grid(~Interface)</code></pre>
-<p><img src="wall_files/figure-html/unnamed-chunk-3-1.png" width="672" /></p>
+               geom = &quot;crossbar&quot;, size = 0.4, width = 0.5, alpha=1, position = dodge) +
+  # we differentiate the roots (datasets) via different shapes
+  ggbeeswarm::geom_quasirandom(aes(shape=DatasetFilename, fill=Genotype, colour=Genotype), width = 0.2, size= 2, alpha=0.5, dodge.width = 0.8, show.legend = FALSE) +
+  labs(x = &quot;Positions&quot;, y = &quot;Wall thickness (nm)&quot;) +
+  facet_grid(~Interface) +
+  # here the manual scales are a bit redundant but useful when multiple genotypes present
+  scale_color_manual(values=c(&quot;#000000&quot;)) +
+  scale_fill_manual(values=c(&quot;#000000&quot;)) +
+  scale_y_continuous(limits = c(20,180)) +
+  scale_shape_manual(values=c(19,17))</code></pre>
+<p><img src="wall_files/figure-html/unnamed-chunk-3-2.png" width="672" /></p>
 <p>We have reached the end of this guided pipeline. We hope you will employ the tools we developed for the Plasmodesmata community. Please feel free to share feedback!</p>
 <p>Good luck with your research!</p>
 </div>
