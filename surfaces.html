@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -72,9 +72,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -88,7 +86,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -193,8 +190,6 @@ $(document).ready(function () {
 });
 </script>
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
 
 <style type="text/css">
@@ -239,6 +234,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -251,48 +247,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -306,6 +263,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -341,8 +304,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -351,6 +312,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -497,12 +468,12 @@ cluster_example %&gt;%
 <pre><code>## # A tibble: 6 x 3
 ##   .cluster   area total_area
 ##   &lt;fct&gt;     &lt;dbl&gt;      &lt;dbl&gt;
-## 1 1        0.0292       12.6
-## 2 2        0.0577       12.6
-## 3 3        0.365        12.6
-## 4 4        0.317        12.6
-## 5 5        0.359        12.6
-## 6 6        0.167        12.6</code></pre>
+## 1 1        0.365        12.6
+## 2 2        0.359        12.6
+## 3 3        0.317        12.6
+## 4 4        0.167        12.6
+## 5 5        0.204        12.6
+## 6 6        0.0827       12.6</code></pre>
 <pre class="r"><code># do note that the units of these values are not strictyly speaking conventional surface units as the coordinates underwent a pca. We address this aspect in following steps</code></pre>
 <p><br></p>
 </div>
@@ -632,26 +603,23 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 <div id="calculating-the-actual-surface-of-the-interface" class="section level1">
 <h1>Calculating the actual surface of the interface</h1>
 <p><br></p>
-<p>In this part we try to relate the percentages we calculated in the <a href="#surf1">sections above</a> to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the <em>Contacts3D</em> plugin. An earlier version of the plugin has actually been used in an earlier paper we published <a href="https://www.nature.com/articles/s41477-019-0429-5">Yan et al.(2019)</a></p>
+<p>In this part we try to relate the percentages we calculated in the <a href="#surf1">sections above</a> to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the <em>SurfaceArea3D</em> plugin. An earlier version of the plugin has actually been used in an earlier paper we published <a href="https://www.nature.com/articles/s41477-019-0429-5">Yan et al.(2019)</a></p>
 <p><br></p>
 </div>
 <div id="run2" class="section level1">
-<h1>Run the <em>ContactArea3D</em> plugin</h1>
+<h1>Run the <em>SurfaceArea3D</em> plugin</h1>
 <p><br> Make sure you have loaded your datasets and models as described in the <a href="preliminary.html">Preliminary Steps section</a>. In this case annotations are not required.</p>
-<p>From the MIB interface go to the Plugins tab -&gt; Organelle Analysis -&gt; ContactArea3D. A user interface will appear with multiple fields to be filled in. There is also a help section available.</p>
+<p>From the MIB interface go to the Plugins tab -&gt; Organelle Analysis -&gt; SurfaceArea3D. A user interface will appear with multiple fields to be filled in. There is also a help section available.</p>
 <p>For “XY smoothing”, “XY sampling” and “Z sampling” we imput values of <em>5, 5 and 1</em>. This creates an appropriate level of surface smoothing for the surface we are trying to generate and ensures a good yet computationally feasible sampling of our models to generate the surface itself. Clicking “Save results in” enables you to store the surface area values and by pressing “Filename for export” you can ensure that the format is <em>.csv</em>. “Export contact To Imaris” enables to send the surface to Imaris for 3D rendering.</p>
 <p>After pressing “Continue”, when the process has finished a new window will appear with the largest of surfaces calculated appearing in it.</p>
-<div class="figure">
-<img src="img/area.png" width="700" />
-
-</div>
+<p><img src="img/area.png" width="700" /></p>
 <p><br></p>
 </div>
 <div id="check-outputs" class="section level1">
 <h1>Check outputs</h1>
 <p><br></p>
 <p>If the plugin has worked correctly and you followed the instructions to calculate the surfaces of the models your <em>Data_individual_cells</em> folder should now contain one additional files.</p>
-<p>This is the output of the <em>ContactArea3D</em> plugin: a <i>*_ContactArea3D_wall.csv</i> file.</p>
+<p>This is the output of the <em>SurfaceArea3D</em> plugin: a <i>*_SurfaceArea3D_wall.csv</i> file.</p>
 <p>In the files one object with a certain surface shoud be listed in most cases. However, please note that in certain cases (such as cases where shifts in the images are present) multiple objects might be detected. This is just because the software can’t generate a single objects but rather produces two objects separated by the section where the image shift occurred. Small wall sections can also generate additional smaller objects</p>
 <p><br> <img src="img/area_output.png" width="700" /></p>
 <p><br></p>
@@ -667,7 +635,7 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 setwd(&#39;./Data_individual_cells&#39;)
 
 #first we read the files 
-Col_area &lt;- list.files(path = &quot;.&quot;, pattern = &quot;ContactArea3D_wall.csv&quot;) %&gt;%   map_df(function(f){
+Col_area &lt;- list.files(path = &quot;.&quot;, pattern = &quot;SurfaceArea3D_wall.csv&quot;) %&gt;%   map_df(function(f){
         #this will print the dataset 
     print(f) 
     x &lt;- read_csv(f) %&gt;% 
@@ -678,12 +646,12 @@ Col_area &lt;- list.files(path = &quot;.&quot;, pattern = &quot;ContactArea3D_wa
   })    
 
 #we edit the text of the DatasetFilename column to clean it 
-Col_area$DatasetFilename &lt;- gsub(&quot;_ContactArea3D_wall.csv&quot;, &quot;&quot;, Col_area$DatasetFilename)</code></pre>
+Col_area$DatasetFilename &lt;- gsub(&quot;_SurfaceArea3D_wall.csv&quot;, &quot;&quot;, Col_area$DatasetFilename)</code></pre>
 <pre class="r"><code># IMPORTANT:
 # the working directory is assumed to be the downloaded folder &quot;Data_individual_cells&quot; so paths are given relative to that. Make sure this is also the case in your R environment using the getwd and setwd
 
 #first we read the files 
-Col_area &lt;- list.files(path = &quot;.&quot;, pattern = &quot;ContactArea3D_wall.csv&quot;) %&gt;%   
+Col_area &lt;- list.files(path = &quot;.&quot;, pattern = &quot;SurfaceArea3D_wall.csv&quot;) %&gt;%   
   map_df(function(f){
         #this will print the dataset 
     print(f) 
@@ -695,7 +663,7 @@ Col_area &lt;- list.files(path = &quot;.&quot;, pattern = &quot;ContactArea3D_wa
   })    
 
 #we edit the text of the DatasetFilename column to clean it 
-Col_area$DatasetFilename &lt;- gsub(&quot;_ContactArea3D_wall.csv&quot;, &quot;&quot;, Col_area$DatasetFilename)</code></pre>
+Col_area$DatasetFilename &lt;- gsub(&quot;_SurfaceArea3D_wall.csv&quot;, &quot;&quot;, Col_area$DatasetFilename)</code></pre>
 <pre class="r"><code># because in some cases multiple objects were generated (despite having a single cellular interface) we merge those multiple objects into a single one
 Col_area_corrected &lt;- Col_area %&gt;% group_by(Genotype, Interface, DatasetFilename) %&gt;% dplyr::summarise(total_surface = sum(SurfaceArea, na.rm = TRUE))
 
@@ -747,6 +715,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->

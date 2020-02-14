@@ -266,16 +266,16 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 
 <br>
 
-In this part we try to relate the percentages we calculated in the [sections above](#surf1) to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the *Contacts3D* plugin. An earlier version of the plugin has actually been used in an earlier paper we published [Yan et al.(2019)](https://www.nature.com/articles/s41477-019-0429-5)
+In this part we try to relate the percentages we calculated in the [sections above](#surf1) to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the *SurfaceArea3D* plugin. An earlier version of the plugin has actually been used in an earlier paper we published [Yan et al.(2019)](https://www.nature.com/articles/s41477-019-0429-5)
 
 <br>
 
-# Run the *ContactArea3D* plugin {#run2} 
+# Run the *SurfaceArea3D* plugin {#run2} 
 
 <br>
 Make sure you have loaded your datasets and models as described in the [Preliminary Steps section](preliminary.html). In this case annotations are not required.
 
-From the MIB interface go to the Plugins tab -> Organelle Analysis -> ContactArea3D. A user interface will appear with multiple fields to be filled in. There is also a help section available.
+From the MIB interface go to the Plugins tab -> Organelle Analysis -> SurfaceArea3D. A user interface will appear with multiple fields to be filled in. There is also a help section available.
 
 For "XY smoothing", "XY sampling" and "Z sampling" we imput values of *5, 5 and 1*. This creates an appropriate level of surface smoothing for the surface we are trying to generate and ensures a good yet computationally feasible sampling of our models to generate the surface itself.
 Clicking "Save results in" enables you to store the surface area values and by pressing "Filename for export" you can ensure that the format is *.csv*. "Export contact To Imaris" enables to send the surface to Imaris for 3D rendering.
@@ -292,7 +292,7 @@ After pressing "Continue", when the process has finished a new window will appea
 
 If the plugin has worked correctly and you followed the instructions to calculate the surfaces of the models your *Data_individual_cells* folder should now contain one additional files. 
 
-This is the output of the *ContactArea3D* plugin: a <i>\*_ContactArea3D_wall.csv</i> file. 
+This is the output of the *SurfaceArea3D* plugin: a <i>\*_SurfaceArea3D_wall.csv</i> file. 
 
 In the files one object with a certain surface shoud be listed in most cases. However, please note that in certain cases (such as cases where shifts in the images are present) multiple objects might be detected. This is just because the software can't generate a single objects but rather produces two objects separated by the section where the image shift occurred. Small wall sections can also generate additional smaller objects
 
@@ -317,7 +317,7 @@ If you want to analyse multiple datasets at the same, as we will do here, the pr
 setwd('./Data_individual_cells')
 
 #first we read the files 
-Col_area <- list.files(path = ".", pattern = "ContactArea3D_wall.csv") %>%   map_df(function(f){
+Col_area <- list.files(path = ".", pattern = "SurfaceArea3D_wall.csv") %>%   map_df(function(f){
         #this will print the dataset 
     print(f) 
     x <- read_csv(f) %>% 
@@ -328,7 +328,7 @@ Col_area <- list.files(path = ".", pattern = "ContactArea3D_wall.csv") %>%   map
   })    
 
 #we edit the text of the DatasetFilename column to clean it 
-Col_area$DatasetFilename <- gsub("_ContactArea3D_wall.csv", "", Col_area$DatasetFilename)
+Col_area$DatasetFilename <- gsub("_SurfaceArea3D_wall.csv", "", Col_area$DatasetFilename)
 
 ```
 
@@ -338,7 +338,7 @@ Col_area$DatasetFilename <- gsub("_ContactArea3D_wall.csv", "", Col_area$Dataset
 # the working directory is assumed to be the downloaded folder "Data_individual_cells" so paths are given relative to that. Make sure this is also the case in your R environment using the getwd and setwd
 
 #first we read the files 
-Col_area <- list.files(path = ".", pattern = "ContactArea3D_wall.csv") %>%   
+Col_area <- list.files(path = ".", pattern = "SurfaceArea3D_wall.csv") %>%   
   map_df(function(f){
         #this will print the dataset 
     print(f) 
@@ -350,7 +350,7 @@ Col_area <- list.files(path = ".", pattern = "ContactArea3D_wall.csv") %>%
   })    
 
 #we edit the text of the DatasetFilename column to clean it 
-Col_area$DatasetFilename <- gsub("_ContactArea3D_wall.csv", "", Col_area$DatasetFilename)
+Col_area$DatasetFilename <- gsub("_SurfaceArea3D_wall.csv", "", Col_area$DatasetFilename)
 
 ```
 

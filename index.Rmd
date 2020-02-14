@@ -43,6 +43,7 @@ When you are ready please move to the [Preliminary steps section](preliminary.ht
 Please report issues concerning the R code present on this website by opening a new issue on our repository (alternatively, please e-mail andrea.paterlini@slcu.cam.ac.uk). Suggestions are also warmly welcomed.
 
 For comments directly related to the workings of the plugins please contact ilya.belevich@helsinki.fi 
+You can also check out [his GitHub](https://github.com/Ajaxels).
 
 <br>
 
@@ -52,7 +53,7 @@ For comments directly related to the workings of the plugins please contact ilya
 
 The work is under a GNU AGPLv3 open access license[^3]. Please compile with its conditions.
 
-When using or editing the resources developed here please reference the paper and link to the github of [Andrea Paterlini](https://github.com/AndreaPaterlini).
+When using or editing the resources developed here please reference the paper and the online resources on the github of [Andrea Paterlini](https://github.com/AndreaPaterlini).
 
 <br>
 

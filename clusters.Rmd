@@ -171,17 +171,21 @@ run_clustering <- function(data, k){
   return(mclust_result)
 }
 
-root_1_clust <- root_1 %>%  as_tibble() %>%
+root_1_clust <- root_1 %>% as_tibble() %>%
   group_by(DatasetFilename, Cell) %>% 
-  nest() %>% 
-  mutate(k = c(11, 20, 6, 13)) %>% 
+  nest() %>%
+  ungroup() %>%
+  #the latest version of tidyverse has introduced conservation of grouping in the nest function so we need to ungroup after that. Or alternatively nest directly without grouping nest(-DatasetFilename, -Cell), you nest everything but the grouping 
+  mutate(k=c(11, 20, 6, 13)) %>% 
   mutate(kresult = map2(data, k, run_clustering)) %>% 
   select(-data) %>% 
   unnest(kresult)
 
 root_2_clust <- root_2 %>% as_tibble() %>%
   group_by(DatasetFilename, Cell) %>% 
-  nest() %>% 
+  nest() %>%
+  ungroup() %>%
+  #the latest version of tidyverse has introduced conservation of grouping in the nest function so we need to ungroup after that. Or alternatively nest directly without grouping nest(-DatasetFilename, -Cell), you nest everything but the grouping
   mutate(k = c(6,8,20,12)) %>% 
   mutate(kresult = map2(data, k, run_clustering)) %>% 
   select(-data) %>% 
