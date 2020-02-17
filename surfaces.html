@@ -609,8 +609,14 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 <div id="run2" class="section level1">
 <h1>Run the <em>SurfaceArea3D</em> plugin</h1>
 <p><br> Make sure you have loaded your datasets and models as described in the <a href="preliminary.html">Preliminary Steps section</a>. In this case annotations are not required.</p>
-<p>From the MIB interface go to the Plugins tab -&gt; Organelle Analysis -&gt; SurfaceArea3D. A user interface will appear with multiple fields to be filled in. There is also a help section available.</p>
-<p>For “XY smoothing”, “XY sampling” and “Z sampling” we imput values of <em>5, 5 and 1</em>. This creates an appropriate level of surface smoothing for the surface we are trying to generate and ensures a good yet computationally feasible sampling of our models to generate the surface itself. Clicking “Save results in” enables you to store the surface area values and by pressing “Filename for export” you can ensure that the format is <em>.csv</em>. “Export contact To Imaris” enables to send the surface to Imaris for 3D rendering.</p>
+<p>From the MIB interface go to the Plugins tab -&gt; Organelle Analysis -&gt; SurfaceArea3D. A user interface will appear with multiple fields to be filled in:</p>
+<ul>
+<li><p>For “Material with surface” select the appropriate segmented object you want to calculate the area of.</p></li>
+<li><p>For “XY smoothing”, “XY sampling” and “Z sampling” input values of <em>5, 5 and 1</em>. This creates an appropriate level of surface smoothing for the surface we are trying to generate and ensures a good yet computationally feasible sampling of our models to generate the surface itself. This parameter might depend on your object of interest.</p></li>
+<li><p>Clicking “Export results to Matlab” displays the resulting surface values in Matlab. Clicking “Save results in Matlab, Excel or CSV format” conversely allows you to store these values in a file. By pressing “Filename for export” ensure that the format is <em>.csv</em> (this is the format we recommend and used in this analysis)</p></li>
+<li><p>Clicking “Generate a model for each contact” enables you to store the surface object(s) being generated</p></li>
+<li><p>“Export contact To Imaris” sends the generated surface(s) to Imaris for 3D rendering.</p></li>
+</ul>
 <p>After pressing “Continue”, when the process has finished a new window will appear with the largest of surfaces calculated appearing in it.</p>
 <p><img src="img/area.png" width="700" /></p>
 <p><br></p>

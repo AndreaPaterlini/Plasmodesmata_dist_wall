@@ -275,10 +275,18 @@ In this part we try to relate the percentages we calculated in the [sections abo
 <br>
 Make sure you have loaded your datasets and models as described in the [Preliminary Steps section](preliminary.html). In this case annotations are not required.
 
-From the MIB interface go to the Plugins tab -> Organelle Analysis -> SurfaceArea3D. A user interface will appear with multiple fields to be filled in. There is also a help section available.
+From the MIB interface go to the Plugins tab -> Organelle Analysis -> SurfaceArea3D. 
+A user interface will appear with multiple fields to be filled in: 
 
-For "XY smoothing", "XY sampling" and "Z sampling" we imput values of *5, 5 and 1*. This creates an appropriate level of surface smoothing for the surface we are trying to generate and ensures a good yet computationally feasible sampling of our models to generate the surface itself.
-Clicking "Save results in" enables you to store the surface area values and by pressing "Filename for export" you can ensure that the format is *.csv*. "Export contact To Imaris" enables to send the surface to Imaris for 3D rendering.
+  * For "Material with surface" select the appropriate segmented object you want to calculate the area of. 
+
+  * For "XY smoothing", "XY sampling" and "Z sampling" input values of *5, 5 and 1*. This creates an appropriate level of surface smoothing for the surface we are trying to generate and ensures a good yet computationally feasible sampling of our models to generate the surface itself. This parameter might depend on your object of interest.
+
+  *  Clicking "Export results to Matlab" displays the resulting surface values in Matlab. Clicking "Save results in Matlab, Excel or CSV format" conversely allows you to store these values in a file. By pressing "Filename for export" ensure that the format is *.csv* (this is the format we recommend and used in this analysis) 
+
+  * Clicking "Generate a model for each contact" enables you to store the surface object(s) being generated
+
+  * "Export contact To Imaris" sends the generated surface(s) to Imaris for 3D rendering.
 
 After pressing "Continue", when the process has finished a new window will appear with the largest of surfaces calculated appearing in it.
 

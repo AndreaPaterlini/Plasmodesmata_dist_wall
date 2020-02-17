@@ -19,16 +19,21 @@ In this section we shift to a different biological question and we employ the la
 
 Make sure you have loaded your datasets, models and annotations as described in in the [Preliminary Steps section](preliminary.html).  
 
-From the MIB interface go to the *Plugins* tab -> *Plasmodesmata* -> *CellWallThickness*. A user interface will appear with fields to be filled in. 
+From the MIB interface go to the *Plugins* tab -> *Plasmodesmata* -> *CellWallThickness*. A user interface will appear with fields to be filled in.
 
-*Thin and remove branches* button within the pre-processing box generates a midline of the model (in presence of branching points, keeps the longest branch) and temporarily stores it in the Mask layer of the *.model* file. For more details please see the paper. 
+  * "Select material for analysis" requires you to choose the correct segmented object for analysis 
+  * *Thin and remove branches* button within the pre-processing box generates a midline of the model (in presence of branching points, keeps the longest branch) and temporarily stores it in the Mask layer of the *.model* file. For more details please see the paper. 
 
-In the option box various parameters can be selected: 
-"Analysis of pores" calculates the cell wall thickness in proximity of the plasmodesmata (or any other provided annotation), in addition to measuring the wall thickness at all positions on the midline of the model. 
-"Analysis of randomly placed pores" calculates the cell wall thickness at control points (uniformly distributed over the same provided model) equal in number to the annotations provided. "Random number generator id" enables to reproduce results for the controls (generating the same random distributions for that particular model). The same id number needs to be used for such purpose. Every time you will run the plugin - on the same dataset - with that number you will obtain the same control points.
-In order to make the data classes (real or "closest" points, the random "simulated" points, and "all points") independent, you need to press "Remove data points from all points" and "Remove random points from all points". This ensures that no point from those classes will be included in the other class. "Mark the distances" displays on the model the distance vectors that are being measured (at plasmodesmata and control positions). 
+A series of options are available for the analysis:
+
+  * Selecting "Analysis of pores" calculates the cell wall thickness in proximity of the plasmodesmata (or any other provided annotation), in addition to measuring the wall thickness at all positions on the midline of the model. 
+  * Selecting "Analysis of randomly placed pores" calculates the cell wall thickness at control points (uniformly distributed over the same provided model) equal in number to the annotations provided. "Random number generator id" enables to reproduce results for the controls (generating the same random distributions for that particular model). The same id number needs to be used for such purpose. Every time you will run the plugin - on the same dataset - with that number you will obtain the same control points.
+  * In order to make the data classes (real or "closest" points, the random "simulated" points, and "all points") independent, you need to press "Remove data points from all points" and "Remove random points from all points". This ensures that no point from those classes will be included in the other class.   * "Mark the distances" displays on the model the distance vectors that are being measured (at plasmodesmata and control positions). 
 
 Note: if you were to compare the overall cell wall thickness between interfaces (as performed in the paper) you would need to leave all boxes from the option section unclicked.
+
+  * Clicking "Export results to Matlab" displays the resulting values in Matlab. Clicking "Save results in Matlab, Excel or CSV format" conversely allows you to store these values in a file. 
+  * "Save centerline thickness map" enables you to save the thinned model as an image, which can then be imported into rendering software.
 
 ![](./img/wall.png){width=700}
 

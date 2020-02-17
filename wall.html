@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -72,9 +72,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -88,7 +86,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -193,8 +190,6 @@ $(document).ready(function () {
 });
 </script>
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
 
 <style type="text/css">
@@ -239,6 +234,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -251,48 +247,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -306,6 +263,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -341,8 +304,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -351,6 +312,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -412,20 +383,29 @@ div.tocify {
 
 
 <p><br></p>
-<p>In this section we shift to a different biological question and we employ the last plugin developed for the Paterlini, Belevich et al. paper. Using the <em>CellWallThickness</em> plugin we will try to address the biological question of cell wall thickness around Plasmodesmata (or similar types of annotations along a given model). We ask: <strong>Is the cell wall in proximity of plasmodesmata different (in terms of thickness) compared to the wall average?</strong></p>
+<p>In this section we shift to a different biological question and we employ the last plugin developed for the Paterlini, Belevich et al. paper. Using the <em>CellWallThickness</em> plugin we will try to address the biological question of cell wall thickness around Plasmodesmata (or similar types of annotations along a given model). We ask: <strong>Is the cell wall in proximity of plasmodesmata different (in terms of thickness) compared to the wall average?</strong></p>
 <p><br></p>
 <div id="run3" class="section level1">
 <h1>Run the <em>CellWallThickness</em> plugin</h1>
 <p><br></p>
 <p>Make sure you have loaded your datasets, models and annotations as described in in the <a href="preliminary.html">Preliminary Steps section</a>.</p>
 <p>From the MIB interface go to the <em>Plugins</em> tab -&gt; <em>Plasmodesmata</em> -&gt; <em>CellWallThickness</em>. A user interface will appear with fields to be filled in.</p>
-<p><em>Thin and remove branches</em> button within the pre-processing box generates a midline of the model (in presence of branching points, keeps the longest branch) and temporarily stores it in the Mask layer of the <em>.model</em> file. For more details please see the paper.</p>
-<p>In the option box various parameters can be selected: “Analysis of pores” calculates the cell wall thickness in proximity of the plasmodesmata (or any other provided annotation), in addition to measuring the wall thickness at all positions on the midline of the model. “Analysis of randomly placed pores” calculates the cell wall thickness at control points (uniformly distributed over the same provided model) equal in number to the annotations provided. “Random number generator id” enables to reproduce results for the controls (generating the same random distributions for that particular model). The same id number needs to be used for such purpose. Every time you will run the plugin - on the same dataset - with that number you will obtain the same control points. In order to make the data classes (real or “closest” points, the random “simulated” points, and “all points”) independent, you need to press “Remove data points from all points” and “Remove random points from all points”. This ensures that no point from those classes will be included in the other class. “Mark the distances” displays on the model the distance vectors that are being measured (at plasmodesmata and control positions).</p>
+<ul>
+<li>“Select material for analysis” requires you to choose the correct segmented object for analysis</li>
+<li><em>Thin and remove branches</em> button within the pre-processing box generates a midline of the model (in presence of branching points, keeps the longest branch) and temporarily stores it in the Mask layer of the <em>.model</em> file. For more details please see the paper.</li>
+</ul>
+<p>A series of options are available for the analysis:</p>
+<ul>
+<li>Selecting “Analysis of pores” calculates the cell wall thickness in proximity of the plasmodesmata (or any other provided annotation), in addition to measuring the wall thickness at all positions on the midline of the model.</li>
+<li>Selecting “Analysis of randomly placed pores” calculates the cell wall thickness at control points (uniformly distributed over the same provided model) equal in number to the annotations provided. “Random number generator id” enables to reproduce results for the controls (generating the same random distributions for that particular model). The same id number needs to be used for such purpose. Every time you will run the plugin - on the same dataset - with that number you will obtain the same control points.</li>
+<li>In order to make the data classes (real or “closest” points, the random “simulated” points, and “all points”) independent, you need to press “Remove data points from all points” and “Remove random points from all points”. This ensures that no point from those classes will be included in the other class. * “Mark the distances” displays on the model the distance vectors that are being measured (at plasmodesmata and control positions).</li>
+</ul>
 <p>Note: if you were to compare the overall cell wall thickness between interfaces (as performed in the paper) you would need to leave all boxes from the option section unclicked.</p>
-<div class="figure">
-<img src="img/wall.png" width="700" />
-
-</div>
+<ul>
+<li>Clicking “Export results to Matlab” displays the resulting values in Matlab. Clicking “Save results in Matlab, Excel or CSV format” conversely allows you to store these values in a file.</li>
+<li>“Save centerline thickness map” enables you to save the thinned model as an image, which can then be imported into rendering software.</li>
+</ul>
+<p><img src="img/wall.png" width="700" /></p>
 <p><br></p>
 <p>After pressing “Continue”, when the process has finished a new window will appear with visual plots of the wall thickness values for the various categories being requested.</p>
 <p><br></p>
@@ -568,6 +548,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
