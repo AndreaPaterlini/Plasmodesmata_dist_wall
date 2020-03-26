@@ -7,6 +7,19 @@ output:
       collapsed: true
 ---
 
+<!-- Load Zooming library -->
+<script src="https://unpkg.com/zooming/build/zooming.min.js"></script>
+
+<script>
+// Listen to images after DOM content is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+new Zooming({
+// options...
+}).listen('.img-zoomable')
+})
+</script>
+
+
 <br>
 
 In this document we offer the opportunity to test the pipeline on some sample data before applying it to your own data. You don't have to download the data if don't feel like it, you can also just follow the text.
@@ -28,6 +41,10 @@ We have uploaded **Example datasets** to the Google drive (they will be moved to
 In the unzipped folder you will find a series of files of different types. Here is a snapshot image showing them
 
 <br>
+
+<figure><img src='./img/data.png' class='img-zoomable' /></figure>
+
+
 ![](./img/data.png){width="750"}
 
 
@@ -51,6 +68,8 @@ Lauch the MIB software. Load the dataset by defining the folder path in the uppe
 Once you have completed these tasks you should see the following view. Please note that here we are using the first dataset contained in the *Data_individual_cells* folder (*_PPP1-EN.am). The cell wall model is shown in green, superimposed on the original image stack. Annotations are shows as crosses in yellow with text next to them. Black circles in the image point to the functions previously described to load the various components.
 
 <br>
+
+<figure><img src='./img/loaded_data.png' class='img-zoomable' /></figure>
 
 ![](./img/loaded_data.png){width=800}
 

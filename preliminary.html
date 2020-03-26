@@ -1,12 +1,12 @@
 <!DOCTYPE html>
 
-<html xmlns="http://www.w3.org/1999/xhtml">
+<html>
 
 <head>
 
 <meta charset="utf-8" />
-<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="generator" content="pandoc" />
+<meta http-equiv="X-UA-Compatible" content="IE=EDGE" />
 
 
 
@@ -72,9 +72,7 @@ h6 {
 </style>
 
 
-</head>
 
-<body>
 
 <style type = "text/css">
 .main-container {
@@ -88,7 +86,6 @@ code {
 }
 img {
   max-width:100%;
-  height: auto;
 }
 .tabbed-pane {
   padding-top: 12px;
@@ -193,8 +190,6 @@ $(document).ready(function () {
 });
 </script>
 
-<div class="container-fluid main-container">
-
 <!-- tabsets -->
 
 <style type="text/css">
@@ -239,6 +234,7 @@ $(document).ready(function () {
   border: none;
   display: inline-block;
   border-radius: 4px;
+  background-color: transparent;
 }
 
 .tabset-dropdown > .nav-tabs.nav-tabs-open > li {
@@ -251,48 +247,9 @@ $(document).ready(function () {
 }
 </style>
 
-<script>
-$(document).ready(function () {
-  window.buildTabsets("TOC");
-});
-
-$(document).ready(function () {
-  $('.tabset-dropdown > .nav-tabs > li').click(function () {
-    $(this).parent().toggleClass('nav-tabs-open')
-  });
-});
-</script>
-
 <!-- code folding -->
 
 
-
-<script>
-$(document).ready(function ()  {
-
-    // move toc-ignore selectors from section div to header
-    $('div.section.toc-ignore')
-        .removeClass('toc-ignore')
-        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
-
-    // establish options
-    var options = {
-      selectors: "h1,h2,h3",
-      theme: "bootstrap3",
-      context: '.toc-content',
-      hashGenerator: function (text) {
-        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
-      },
-      ignoreSelector: ".toc-ignore",
-      scrollTo: 0
-    };
-    options.showAndHide = true;
-    options.smoothScroll = true;
-
-    // tocify
-    var toc = $("#TOC").tocify(options).data("toc-tocify");
-});
-</script>
 
 <style type="text/css">
 
@@ -306,6 +263,12 @@ $(document).ready(function ()  {
 }
 }
 
+@media print {
+.toc-content {
+  /* see https://github.com/w3c/csswg-drafts/issues/4434 */
+  float: right;
+}
+}
 
 .toc-content {
   padding-left: 30px;
@@ -341,8 +304,6 @@ div.tocify {
 
 .tocify-subheader .tocify-item {
   font-size: 0.90em;
-  padding-left: 25px;
-  text-indent: 0;
 }
 
 .tocify .list-group-item {
@@ -351,6 +312,16 @@ div.tocify {
 
 
 </style>
+
+
+
+</head>
+
+<body>
+
+
+<div class="container-fluid main-container">
+
 
 <!-- setup 3col/9col grid for toc_float and main content  -->
 <div class="row-fluid">
@@ -411,6 +382,16 @@ div.tocify {
 </div>
 
 
+<!-- Load Zooming library -->
+<script src="https://unpkg.com/zooming/build/zooming.min.js"></script>
+<script>
+// Listen to images after DOM content is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+new Zooming({
+// options...
+}).listen('.img-zoomable')
+})
+</script>
 <p><br></p>
 <p>In this document we offer the opportunity to test the pipeline on some sample data before applying it to your own data. You don’t have to download the data if don’t feel like it, you can also just follow the text.</p>
 <p><br></p>
@@ -424,7 +405,11 @@ div.tocify {
 <h1>Open the data</h1>
 <p><br></p>
 <p>In the unzipped folder you will find a series of files of different types. Here is a snapshot image showing them</p>
-<p><br> <img src="img/data.png" width="750" /></p>
+<p><br></p>
+<figure>
+<img src='img/data.png' class='img-zoomable' />
+</figure>
+<p><img src="img/data.png" width="750" /></p>
 <p>In the folder there are datasets from 2 different Col-0 samples (WT <em>Arabidopsis thaliana</em> roots). The data associated with each sample are shown with the vertical brown and light blue bars in the image. For each of these two samples, multiple cells are provided. Each cell dataset has 3 files associated with it to start with (more will be generated as we go along the pipeline).</p>
 <p>You should see a <em>.am</em> file (blue box), which contains the image stack itself (and is indeed the heaviest file), a <em>.model</em> file (green box) which contains the cell wall model (this has already been generated, in the case of your own data you would have to carefully generate this model as described in the paper and using the tools of the MIB software) and a <em>.ann</em> file (yellow box) containing the annotated PD positions (again for your datasets you would have to generate this on your own).</p>
 <p><br></p>
@@ -432,15 +417,15 @@ div.tocify {
 <div id="load" class="section level1">
 <h1>Load the data</h1>
 <p><br></p>
-<p>To load and operate on the data you will need the MIB software<a href="#fn1" class="footnoteRef" id="fnref1"><sup>1</sup></a>, you can download it from <a href="http://mib.helsinki.fi/">this website</a>. Please see the <em>Downloads</em> tab for the version that might best suit your system requirements. The <em>Matlab version</em> requires you to have a version of the proprietary Matlab software. If you don’t there is no need for you to purchase such programme, just downlaod a <em>Standalone version</em> of MIB.</p>
+<p>To load and operate on the data you will need the MIB software<a href="#fn1" class="footnote-ref" id="fnref1"><sup>1</sup></a>, you can download it from <a href="http://mib.helsinki.fi/">this website</a>. Please see the <em>Downloads</em> tab for the version that might best suit your system requirements. The <em>Matlab version</em> requires you to have a version of the proprietary Matlab software. If you don’t there is no need for you to purchase such programme, just downlaod a <em>Standalone version</em> of MIB.</p>
 <p>To familiarise yourself with the sofware interface and learn about its function see the <a href="http://mib.helsinki.fi/tutorials.html"><em>Tutorials</em></a> tab on the MIB website. The tutorials will be particularly useful to generate the models of the cell wall (which is a step we already performed here).</p>
 <p>Lauch the MIB software. Load the dataset by defining the folder path in the upper bar and double clicking on the dataset of interest among those appearing in the left panel. Models should be loaded from the segmentation panel in the lower left half of the workspace. Lastly PD annotations should be loaded via the annotation option in the bottom left side.</p>
 <p>Once you have completed these tasks you should see the following view. Please note that here we are using the first dataset contained in the <em>Data_individual_cells</em> folder (*_PPP1-EN.am). The cell wall model is shown in green, superimposed on the original image stack. Annotations are shows as crosses in yellow with text next to them. Black circles in the image point to the functions previously described to load the various components.</p>
 <p><br></p>
-<div class="figure">
-<img src="img/loaded_data.png" width="800" />
-
-</div>
+<figure>
+<img src='img/loaded_data.png' class='img-zoomable' />
+</figure>
+<p><img src="img/loaded_data.png" width="800" /></p>
 <p><br></p>
 </div>
 <div id="plugins-for-mib" class="section level1">
@@ -478,7 +463,7 @@ install.packages(&quot;scatterplot3d&quot;) #0.3-41
 <div class="footnotes">
 <hr />
 <ol>
-<li id="fn1"><p>The MIB software has been published, you can check the original article at <a href="http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002340" class="uri">http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002340</a><a href="#fnref1">↩</a></p></li>
+<li id="fn1"><p>The MIB software has been published, you can check the original article at <a href="http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002340" class="uri">http://journals.plos.org/plosbiology/article?id=10.1371/journal.pbio.1002340</a><a href="#fnref1" class="footnote-back">↩</a></p></li>
 </ol>
 </div>
 
@@ -500,6 +485,49 @@ $(document).ready(function () {
 });
 
 
+</script>
+
+<!-- tabsets -->
+
+<script>
+$(document).ready(function () {
+  window.buildTabsets("TOC");
+});
+
+$(document).ready(function () {
+  $('.tabset-dropdown > .nav-tabs > li').click(function () {
+    $(this).parent().toggleClass('nav-tabs-open')
+  });
+});
+</script>
+
+<!-- code folding -->
+
+<script>
+$(document).ready(function ()  {
+
+    // move toc-ignore selectors from section div to header
+    $('div.section.toc-ignore')
+        .removeClass('toc-ignore')
+        .children('h1,h2,h3,h4,h5').addClass('toc-ignore');
+
+    // establish options
+    var options = {
+      selectors: "h1,h2,h3",
+      theme: "bootstrap3",
+      context: '.toc-content',
+      hashGenerator: function (text) {
+        return text.replace(/[.\\/?&!#<>]/g, '').replace(/\s/g, '_').toLowerCase();
+      },
+      ignoreSelector: ".toc-ignore",
+      scrollTo: 0
+    };
+    options.showAndHide = true;
+    options.smoothScroll = true;
+
+    // tocify
+    var toc = $("#TOC").tocify(options).data("toc-tocify");
+});
 </script>
 
 <!-- dynamically load mathjax for compatibility with self-contained -->
