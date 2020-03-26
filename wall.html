@@ -382,12 +382,23 @@ div.tocify {
 </div>
 
 
+<!-- Load Zooming library that will enable to click on images and zoom them -->
+<script src="https://unpkg.com/zooming/build/zooming.min.js"></script>
+<script>
+// Listen to images after DOM content is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+new Zooming({
+// options...
+}).listen('.img-zoomable')
+})
+</script>
 <p><br></p>
 <p>In this section we shift to a different biological question and we employ the last plugin developed for the Paterlini, Belevich et al. paper. Using the <em>CellWallThickness</em> plugin we will try to address the biological question of cell wall thickness around Plasmodesmata (or similar types of annotations along a given model). We ask: <strong>Is the cell wall in proximity of plasmodesmata different (in terms of thickness) compared to the wall average?</strong></p>
 <p><br></p>
 <div id="run3" class="section level1">
 <h1>Run the <em>CellWallThickness</em> plugin</h1>
 <p><br></p>
+<p>The plugin is fed a segmented wall and finds its centerline. A distance map, which assigns a value to each model pixel based on its distance to the closest edge of the model, is calculated at each slice. The values at each point of the masked centerline are then obtained by placing the centerline over the distance map image. See the methods section of the paper for more detail.</p>
 <p>Make sure you have loaded your datasets, models and annotations as described in in the <a href="preliminary.html">Preliminary Steps section</a>.</p>
 <p>From the MIB interface go to the <em>Plugins</em> tab -&gt; <em>Plasmodesmata</em> -&gt; <em>CellWallThickness</em>. A user interface will appear with fields to be filled in.</p>
 <ul>
@@ -405,7 +416,10 @@ div.tocify {
 <li>Clicking “Export results to Matlab” displays the resulting values in Matlab. Clicking “Save results in Matlab, Excel or CSV format” conversely allows you to store these values in a file.</li>
 <li>“Save centerline thickness map” enables you to save the thinned model as an image, which can then be imported into rendering software.</li>
 </ul>
-<p><img src="img/wall.png" width="700" /></p>
+<!-- all figures need to be placed in this syntax to be zoomable -->
+<figure>
+<img src='img/wall.png' class='img-zoomable' />
+</figure>
 <p><br></p>
 <p>After pressing “Continue”, when the process has finished a new window will appear with visual plots of the wall thickness values for the various categories being requested.</p>
 <p><br></p>
@@ -415,7 +429,10 @@ div.tocify {
 <p><br></p>
 <p>If the plugin has worked correctly and you followed the instructions to calculate the thicknesses at the positions of interest in the models your Data_individual_cells folder should now contain three additional files.</p>
 <p>One is <i>*_CellWallThickness_info.txt</i> which is a text document containing info on the datasets. We won’t use this file. There is a <i>*_CellWallThickness.csv</i> file which contains the cell wall thicknesses at real and at an equal number of uniformly distributed control points. The third file <i>*_CellWallThickness_allPoints.csv</i> contains the cell wall thickness at every single point at the midline of our cell wall model.</p>
-<p><br> <img src="img/wall_output.png" width="700" /></p>
+<p><br></p>
+<figure>
+<img src='img/wall_output.png' class='img-zoomable' />
+</figure>
 <p><br></p>
 <p>If you want to analyse multiple datasets at the same, as we will do here, the processes described above need to be repeated for each <em>.am</em> file.</p>
 <p><br></p>

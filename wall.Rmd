@@ -7,6 +7,18 @@ output:
       collapsed: true
 ---
 
+<!-- Load Zooming library that will enable to click on images and zoom them -->
+<script src="https://unpkg.com/zooming/build/zooming.min.js"></script>
+
+<script>
+// Listen to images after DOM content is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+new Zooming({
+// options...
+}).listen('.img-zoomable')
+})
+</script>
+
 <br>
 
 In this section we shift to a different biological question and we employ the last plugin developed for the Paterlini, Belevich et al. paper. Using the *CellWallThickness* plugin we will try to address the biological question of cell wall thickness around Plasmodesmata (or similar types of annotations along a given model). We ask: **Is the cell wall in proximity of plasmodesmata different (in terms of thickness) compared to the wall average?**
@@ -16,6 +28,8 @@ In this section we shift to a different biological question and we employ the la
 # Run the *CellWallThickness* plugin {#run3} 
 
 <br>
+
+The plugin is fed a segmented wall and finds its centerline. A distance map, which assigns a value to each model pixel based on its distance to the closest edge of the model, is calculated at each slice. The values at each point of the masked centerline are then obtained by placing the centerline over the distance map image. See the methods section of the paper for more detail.
 
 Make sure you have loaded your datasets, models and annotations as described in in the [Preliminary Steps section](preliminary.html).  
 
@@ -35,7 +49,9 @@ Note: if you were to compare the overall cell wall thickness between interfaces 
   * Clicking "Export results to Matlab" displays the resulting values in Matlab. Clicking "Save results in Matlab, Excel or CSV format" conversely allows you to store these values in a file. 
   * "Save centerline thickness map" enables you to save the thinned model as an image, which can then be imported into rendering software.
 
-![](./img/wall.png){width=700}
+<!-- all figures need to be placed in this syntax to be zoomable -->
+
+<figure><img src='./img/wall.png' class='img-zoomable' /></figure>
 
 <br>
 
@@ -52,7 +68,8 @@ If the plugin has worked correctly and you followed the instructions to calculat
 One is <i>\*_CellWallThickness_info.txt</i> which is a text document containing info on the datasets. We won't use this file. There is a <i>\*_CellWallThickness.csv</i> file which contains the cell wall thicknesses at real and at an equal number of uniformly distributed control points. The third file <i>\*_CellWallThickness_allPoints.csv</i> contains the cell wall thickness at every single point at the midline of our cell wall model.
 
 <br>
-![](./img/wall_output.png){width=700}
+
+<figure><img src='./img/wall_output.png' class='img-zoomable' /></figure>
 
 <br>
 

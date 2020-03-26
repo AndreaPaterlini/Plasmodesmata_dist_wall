@@ -7,6 +7,18 @@ output:
       collapsed: true
 ---
 
+<!-- Load Zooming library that will enable to click on images and zoom them -->
+<script src="https://unpkg.com/zooming/build/zooming.min.js"></script>
+
+<script>
+// Listen to images after DOM content is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+new Zooming({
+// options...
+}).listen('.img-zoomable')
+})
+</script>
+
 <br>
 
 In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the Spatial control plugin shown in the [Distributions section](#distributions.html). Since we previously detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, and we then quantified the number of these clusters of plasmodesmata we now ask: **What proportions of the cellular surface do these clusters occupy?**
@@ -266,7 +278,7 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 
 <br>
 
-In this part we try to relate the percentages we calculated in the [sections above](#surf1) to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the *SurfaceArea3D* plugin. An earlier version of the plugin has actually been used in an earlier paper we published [Yan et al.(2019)](https://www.nature.com/articles/s41477-019-0429-5)
+In this part we try to relate the percentages we calculated in the [sections above](#surf1) to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the *SurfaceArea3D* plugin. The plugin finds the midline of a supplied segmented wall on each slice of the model and then it connects such midlines across the slices, generating a surface. See the methods section of the paper for more details. An earlier version of the plugin has actually been used in an earlier paper we published [Yan et al.(2019)](https://www.nature.com/articles/s41477-019-0429-5)
 
 <br>
 
@@ -290,7 +302,9 @@ A user interface will appear with multiple fields to be filled in:
 
 After pressing "Continue", when the process has finished a new window will appear with the largest of surfaces calculated appearing in it.
 
-![](./img/area.png){width=700}
+<!-- all figures need to be placed in this syntax to be zoomable -->
+
+<figure><img src='./img/area.png' class='img-zoomable' /></figure>
 
 <br>
 
@@ -305,7 +319,9 @@ This is the output of the *SurfaceArea3D* plugin: a <i>\*_SurfaceArea3D_wall.csv
 In the files one object with a certain surface shoud be listed in most cases. However, please note that in certain cases (such as cases where shifts in the images are present) multiple objects might be detected. This is just because the software can't generate a single objects but rather produces two objects separated by the section where the image shift occurred. Small wall sections can also generate additional smaller objects
 
 <br>
-![](./img/area_output.png){width=700}
+<!-- all figures need to be placed in this syntax to be zoomable -->
+
+<figure><img src='./img/area_output.png' class='img-zoomable' /></figure>
 
 <br>
 

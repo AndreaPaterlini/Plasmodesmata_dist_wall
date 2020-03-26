@@ -382,6 +382,16 @@ div.tocify {
 </div>
 
 
+<!-- Load Zooming library that will enable to click on images and zoom them -->
+<script src="https://unpkg.com/zooming/build/zooming.min.js"></script>
+<script>
+// Listen to images after DOM content is fully loaded
+document.addEventListener('DOMContentLoaded', function () {
+new Zooming({
+// options...
+}).listen('.img-zoomable')
+})
+</script>
 <p><br></p>
 <p>In this section we continue to ask questions about the distribution of Plasmodesmata (or similar types of annotations along a given model). We continue to use the output of the Spatial control plugin shown in the <a href="#distributions.html">Distributions section</a>. Since we previously detected a bias in the distribution of Plasmodesmata, strongly hinting at the presence of spatial clustering, and we then quantified the number of these clusters of plasmodesmata we now ask: <strong>What proportions of the cellular surface do these clusters occupy?</strong></p>
 <p><br></p>
@@ -603,7 +613,7 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 <div id="calculating-the-actual-surface-of-the-interface" class="section level1">
 <h1>Calculating the actual surface of the interface</h1>
 <p><br></p>
-<p>In this part we try to relate the percentages we calculated in the <a href="#surf1">sections above</a> to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the <em>SurfaceArea3D</em> plugin. An earlier version of the plugin has actually been used in an earlier paper we published <a href="https://www.nature.com/articles/s41477-019-0429-5">Yan et al.(2019)</a></p>
+<p>In this part we try to relate the percentages we calculated in the <a href="#surf1">sections above</a> to the real surface areas (in um^2) of our cells. To do this we employ the second plugin developed for the Paterlini, Belevich et al. paper: the <em>SurfaceArea3D</em> plugin. The plugin finds the midline of a supplied segmented wall on each slice of the model and then it connects such midlines across the slices, generating a surface. See the methods section of the paper for more details. An earlier version of the plugin has actually been used in an earlier paper we published <a href="https://www.nature.com/articles/s41477-019-0429-5">Yan et al.(2019)</a></p>
 <p><br></p>
 </div>
 <div id="run2" class="section level1">
@@ -618,7 +628,10 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 <li><p>“Export contact To Imaris” sends the generated surface(s) to Imaris for 3D rendering.</p></li>
 </ul>
 <p>After pressing “Continue”, when the process has finished a new window will appear with the largest of surfaces calculated appearing in it.</p>
-<p><img src="img/area.png" width="700" /></p>
+<!-- all figures need to be placed in this syntax to be zoomable -->
+<figure>
+<img src='img/area.png' class='img-zoomable' />
+</figure>
 <p><br></p>
 </div>
 <div id="check-outputs" class="section level1">
@@ -627,7 +640,10 @@ ggplot(clusters_unnested, aes(x= Method, y=perc, colour= Genotype, fill= Genotyp
 <p>If the plugin has worked correctly and you followed the instructions to calculate the surfaces of the models your <em>Data_individual_cells</em> folder should now contain one additional files.</p>
 <p>This is the output of the <em>SurfaceArea3D</em> plugin: a <i>*_SurfaceArea3D_wall.csv</i> file.</p>
 <p>In the files one object with a certain surface shoud be listed in most cases. However, please note that in certain cases (such as cases where shifts in the images are present) multiple objects might be detected. This is just because the software can’t generate a single objects but rather produces two objects separated by the section where the image shift occurred. Small wall sections can also generate additional smaller objects</p>
-<p><br> <img src="img/area_output.png" width="700" /></p>
+<p><br> <!-- all figures need to be placed in this syntax to be zoomable --></p>
+<figure>
+<img src='img/area_output.png' class='img-zoomable' />
+</figure>
 <p><br></p>
 <p>If you want to analyse multiple datasets at the same, as we will do here, the processes described above need to be repeated for each <em>.am</em> file.</p>
 <p><br></p>
