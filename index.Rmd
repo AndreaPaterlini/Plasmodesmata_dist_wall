@@ -29,10 +29,11 @@ When you are ready please move to the [Preliminary steps section](preliminary.ht
 <br>
 
 * [Preliminary steps](preliminary.html) **details the required software, data and libraries**
-* [Spatial distributions](distributions.html) **looks for patterns for how PDs are distributed over a cellular interface**
-* [Cluster numbers](clusters.html) **quantifies parameters of the detected PD clusters, such as their number per interface**
-* [Surface areas](surfaces.html) **calculates what proportions of the cellular surface these clusters occupy**
-* [Wall thickness](wall.html) **looks for differences in thickness of the cell wall in proximity of plasmodesmata**
+* [Distributions](distributions.html) **looks for spatial patterns of how PDs are distributed over a cellular interface**
+* [Clusters](clusters.html) **quantifies parameters of the detected PD clusters, such as their number per interface**
+* [Surfaces](surfaces.html) **calculates what proportions of the cellular surface these clusters occupy**
+* [Cell wall](wall.html) **looks for differences in thickness of the cell wall in proximity of plasmodesmata**
+* [Alternatives](Ripley.html) provides alternative approaches for the spatial analysis
 
 <br>
 

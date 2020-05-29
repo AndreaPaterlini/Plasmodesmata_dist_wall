@@ -15,4 +15,5 @@ navbar:
       href: surfaces.html
     - text: "Cell wall"
       href: wall.html      
-      
+    - text: "Alternatives"
+      href: Ripley.html
