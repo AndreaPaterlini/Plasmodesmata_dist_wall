@@ -33,7 +33,7 @@ When you are ready please move to the [Preliminary steps section](preliminary.ht
 * [Clusters](clusters.html) **quantifies parameters of the detected PD clusters, such as their number per interface**
 * [Surfaces](surfaces.html) **calculates what proportions of the cellular surface these clusters occupy**
 * [Cell wall](wall.html) **looks for differences in thickness of the cell wall in proximity of plasmodesmata**
-* [Alternatives](Ripley.html) provides alternative approaches for the spatial analysis
+* [Alternatives](ripley.html) provides alternative approaches for the spatial analysis
 
 <br>
 
