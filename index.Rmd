@@ -1,5 +1,5 @@
 ---
-title: "Data analysis pipeline in Paterlini, Belevich *et al.*, (submitted)"
+title: "Data analysis pipeline in Paterlini, Belevich *et al.*, 2020"
 author: "created by Andrea Paterlini"
 date: "*1st October 2019*"
 
@@ -9,8 +9,8 @@ date: "*1st October 2019*"
 
 Hello user!
 
-Welcome to the online resources for the Paterlini, Belevich *et al.*, (submitted) paper. 
-The paper will be found at the journal website [(/to be addded when published)](actual link).
+Welcome to the online resources for the Paterlini, Belevich *et al.*, 2020 paper. 
+The paper will be found at the journal website [here](http://www.plantphysiol.org/content/184/1/53).
 
 These resources (in the form of plugins and scripts) have been developed to study Plasmodesmata, small channels that connect plant cells[^1]. Our goal was to extract information about their spatial distribution and cellular environment, as described in our paper.
 
